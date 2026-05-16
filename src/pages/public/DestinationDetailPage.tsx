@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { destinationsApi, toursApi } from '@/api/endpoints';
 import TourCard from '@/components/ui/TourCard';
