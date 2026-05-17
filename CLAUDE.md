@@ -45,3 +45,14 @@ The homepage should include:
 - Use semantic HTML where possible
 - Do not break existing routes or components
 
+
+
+## Related Projects
+
+This frontend works together with the backend project located at:
+
+```text
+
+~/Projects/my-travelline-backend
+
+```
