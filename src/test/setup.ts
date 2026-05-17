@@ -10,4 +10,4 @@ class LocalStorageMock {
   key(index: number) { return Object.keys(this.store)[index] ?? null; }
 }
 
-Object.defineProperty(global, 'localStorage', { value: new LocalStorageMock(), writable: true });
+Object.defineProperty(globalThis, 'localStorage', { value: new LocalStorageMock(), writable: true });
