@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [main, develop]
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   ci:
     name: Lint, Test & Build
@@ -42,6 +46,7 @@ jobs:
         with:
           name: dist
           path: dist/
+          retention-days: 1
 
   deploy:
     name: Deploy to S3 / CloudFront
@@ -59,12 +64,23 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          role-to-assume: arn:aws:iam::947927347939:role/github-actions-mytravelline-frontend-prod
+          aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Deploy to S3
-        run: aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
+      # Hashed assets (JS/CSS/images) are safe to cache for 1 year
+      - name: Sync static assets to S3
+        run: |
+          aws s3 sync dist/ s3://${{ secrets.S3_BUCKET_NAME }} \
+            --delete \
+            --exclude "index.html" \
+            --cache-control "max-age=31536000,immutable"
+
+      # index.html must never be cached so users always get the latest entry point
+      - name: Upload index.html to S3
+        run: |
+          aws s3 cp dist/index.html s3://${{ secrets.S3_BUCKET_NAME }}/index.html \
+            --cache-control "no-cache,no-store,must-revalidate" \
+            --content-type "text/html"
 
       - name: Invalidate CloudFront cache
         run: |
