@@ -129,7 +129,8 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"
+            --paths "/*" \
+            --wait
 
   deploy-admin:
     name: Deploy Admin → S3 / CloudFront
@@ -167,4 +168,5 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.CLOUDFRONT_ADMIN_DISTRIBUTION_ID }} \
-            --paths "/*"
+            --paths "/*" \
+            --wait
