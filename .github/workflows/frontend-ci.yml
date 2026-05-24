@@ -129,8 +129,37 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*" \
-            --wait
+            --paths "/*"
+
+      # Required for SPA routing: serve index.html for any path CloudFront can't find,
+      # so React Router can handle /login, /tours, etc. on direct load or refresh.
+      - name: Ensure CloudFront SPA error pages
+        run: |
+          DIST_ID="${{ vars.CLOUDFRONT_DISTRIBUTION_ID }}"
+          RESULT=$(aws cloudfront get-distribution-config --id "$DIST_ID")
+          ETAG=$(echo "$RESULT" | jq -r '.ETag')
+          CURRENT=$(echo "$RESULT" | jq -r '
+            [.DistributionConfig.CustomErrorResponses.Items[]?
+              | select(.ErrorCode == 403 or .ErrorCode == 404)
+              | select(.ResponsePagePath == "/index.html" and .ResponseCode == "200")]
+            | length')
+          if [ "$CURRENT" -lt 2 ]; then
+            echo "Configuring SPA error pages..."
+            UPDATED=$(echo "$RESULT" | jq '.DistributionConfig |
+              .CustomErrorResponses = {
+                "Quantity": 2,
+                "Items": [
+                  {"ErrorCode": 403, "ResponsePagePath": "/index.html", "ResponseCode": "200", "ErrorCachingMinTTL": 0},
+                  {"ErrorCode": 404, "ResponsePagePath": "/index.html", "ResponseCode": "200", "ErrorCachingMinTTL": 0}
+                ]
+              }')
+            aws cloudfront update-distribution \
+              --id "$DIST_ID" \
+              --distribution-config "$UPDATED" \
+              --if-match "$ETAG"
+          else
+            echo "SPA error pages already configured, skipping."
+          fi
 
   deploy-admin:
     name: Deploy Admin → S3 / CloudFront
@@ -168,5 +197,32 @@ jobs:
         run: |
           aws cloudfront create-invalidation \
             --distribution-id ${{ vars.CLOUDFRONT_ADMIN_DISTRIBUTION_ID }} \
-            --paths "/*" \
-            --wait
+            --paths "/*"
+
+      - name: Ensure CloudFront SPA error pages
+        run: |
+          DIST_ID="${{ vars.CLOUDFRONT_ADMIN_DISTRIBUTION_ID }}"
+          RESULT=$(aws cloudfront get-distribution-config --id "$DIST_ID")
+          ETAG=$(echo "$RESULT" | jq -r '.ETag')
+          CURRENT=$(echo "$RESULT" | jq -r '
+            [.DistributionConfig.CustomErrorResponses.Items[]?
+              | select(.ErrorCode == 403 or .ErrorCode == 404)
+              | select(.ResponsePagePath == "/index.html" and .ResponseCode == "200")]
+            | length')
+          if [ "$CURRENT" -lt 2 ]; then
+            echo "Configuring SPA error pages..."
+            UPDATED=$(echo "$RESULT" | jq '.DistributionConfig |
+              .CustomErrorResponses = {
+                "Quantity": 2,
+                "Items": [
+                  {"ErrorCode": 403, "ResponsePagePath": "/index.html", "ResponseCode": "200", "ErrorCachingMinTTL": 0},
+                  {"ErrorCode": 404, "ResponsePagePath": "/index.html", "ResponseCode": "200", "ErrorCachingMinTTL": 0}
+                ]
+              }')
+            aws cloudfront update-distribution \
+              --id "$DIST_ID" \
+              --distribution-config "$UPDATED" \
+              --if-match "$ETAG"
+          else
+            echo "SPA error pages already configured, skipping."
+          fi
