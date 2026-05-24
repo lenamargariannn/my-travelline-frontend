@@ -1,6 +1,7 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
+import { AuthProvider } from '@/hooks/AuthProvider';
 
 beforeEach(() => {
   localStorage.clear();
@@ -8,19 +9,21 @@ beforeEach(() => {
 
 const renderProtected = () =>
   render(
-    <MemoryRouter initialEntries={['/']}>
-      <Routes>
-        <Route path="/login" element={<div>Login Page</div>} />
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute>
-              <div>Protected Content</div>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </MemoryRouter>
+    <AuthProvider>
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/login" element={<div>Login Page</div>} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <div>Protected Content</div>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </MemoryRouter>
+    </AuthProvider>
   );
 
 describe('ProtectedRoute', () => {
@@ -29,9 +32,12 @@ describe('ProtectedRoute', () => {
     expect(screen.getByText('Login Page')).toBeInTheDocument();
   });
 
-  it('renders children when token exists', () => {
+  it('renders children when token exists', async () => {
     localStorage.setItem('accessToken', 'test-token');
+    localStorage.setItem('user', JSON.stringify({ email: 'a@b.com', name: 'Ana', role: 'ADMIN' }));
     renderProtected();
-    expect(screen.getByText('Protected Content')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Protected Content')).toBeInTheDocument());
   });
 });
+
+
