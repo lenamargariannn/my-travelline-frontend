@@ -1,5 +1,5 @@
 import { createContext } from 'react';
-import type { AuthUser } from '@my-travelline/shared';
+import type { AuthUser } from '@/types/auth';
 
 export interface AuthContextType {
   user: AuthUser | null;

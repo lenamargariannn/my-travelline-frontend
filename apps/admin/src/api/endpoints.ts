@@ -10,12 +10,11 @@ import type {
   Booking,
   ContactMessage,
   PageResponse,
-  LoginRequest,
-  LoginResponse,
   CreateTourRequest,
   CreateBlogPostRequest,
   DashboardStats,
 } from '@my-travelline/shared';
+import type { LoginRequest, LoginResponse } from '@/types/auth';
 
 export const authApi = {
   login: (data: LoginRequest) =>
@@ -38,6 +37,9 @@ export const adminToursApi = {
 
   create: (data: CreateTourRequest) =>
     apiClient.post<Tour>('/admin/tours', data),
+
+  update: (id: number, data: CreateTourRequest) =>
+    apiClient.put<Tour>(`/admin/tours/${id}`, data),
 
   updateStatus: (id: number, status: string) =>
     apiClient.patch<Tour>(`/admin/tours/${id}/status`, { status }),
@@ -123,6 +125,9 @@ export const adminBlogApi = {
 export const adminGalleryApi = {
   getAll: (params?: Record<string, string | number>) =>
     apiClient.get<PageResponse<GalleryImage>>('/admin/gallery', { params }),
+
+  create: (data: { s3Key: string; imageUrl?: string; caption?: string; sortOrder?: number; destinationId?: number }) =>
+    apiClient.post<GalleryImage>('/admin/gallery', data),
 
   delete: (id: number) =>
     apiClient.delete(`/admin/gallery/${id}`),

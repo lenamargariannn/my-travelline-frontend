@@ -1,19 +1,23 @@
 import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Navigate, useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { authApi } from '@/api/endpoints';
 import { useAuth } from '@/hooks/useAuth';
-import type { LoginRequest } from '@my-travelline/shared';
+import type { LoginRequest } from '@/types/auth';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, isAuthenticated } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginRequest>();
 
-  const from = (location.state as { from?: Location })?.from?.pathname ?? '/';
+  const from = (location.state as { from?: Location })?.from?.pathname ?? '/dashboard';
+
+  if (isAuthenticated) {
+    return <Navigate to="/dashboard" replace />;
+  }
 
   const onSubmit = async (data: LoginRequest) => {
     setIsLoading(true);

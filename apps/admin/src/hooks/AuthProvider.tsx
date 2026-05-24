@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
-import type { AuthUser } from '@my-travelline/shared';
+import type { AuthUser } from '@/types/auth';
 
 function loadUserFromStorage(): AuthUser | null {
   const stored = localStorage.getItem('user');

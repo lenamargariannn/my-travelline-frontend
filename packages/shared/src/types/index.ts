@@ -167,19 +167,6 @@ export interface CreateContactRequest {
   message: string;
 }
 
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface LoginResponse {
-  accessToken: string;
-  refreshToken: string;
-  email: string;
-  name: string;
-  role: string;
-}
-
 export interface CreateTourRequest {
   title: string;
   slug: string;
@@ -217,12 +204,3 @@ export interface DashboardStats {
   pendingReviews: number;
 }
 
-// ============================================================
-// Auth Context Types
-// ============================================================
-
-export interface AuthUser {
-  email: string;
-  name: string;
-  role: string;
-}

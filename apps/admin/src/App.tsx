@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Navigate, Routes, Route } from 'react-router-dom';
 import AdminLayout from '@/components/layout/AdminLayout';
 import ProtectedRoute from '@/components/auth/ProtectedRoute';
 
@@ -26,12 +26,13 @@ function App() {
           </ProtectedRoute>
         }
       >
-        <Route index element={<DashboardPage />} />
+        <Route index element={<Navigate to="/dashboard" replace />} />
+        <Route path="dashboard" element={<DashboardPage />} />
         <Route path="tours" element={<AdminToursPage />} />
         <Route path="categories" element={<AdminCategoriesPage />} />
         <Route path="destinations" element={<AdminDestinationsPage />} />
         <Route path="bookings" element={<AdminBookingsPage />} />
-        <Route path="messages" element={<AdminMessagesPage />} />
+        <Route path="contacts" element={<AdminMessagesPage />} />
         <Route path="blog" element={<AdminBlogPage />} />
         <Route path="gallery" element={<AdminGalleryPage />} />
         <Route path="reviews" element={<AdminReviewsPage />} />
