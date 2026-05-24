@@ -1,27 +1,28 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { authApi } from '@/api/endpoints';
+import { useAuth } from '@/hooks/useAuth';
 import type { LoginRequest } from '@my-travelline/shared';
 
 export default function AdminLoginPage() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm<LoginRequest>();
+
+  const from = (location.state as { from?: Location })?.from?.pathname ?? '/';
 
   const onSubmit = async (data: LoginRequest) => {
     setIsLoading(true);
     try {
       const response = await authApi.login(data);
       const { accessToken, refreshToken, email, name, role } = response.data;
-
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('user', JSON.stringify({ email, name, role }));
-
+      login(accessToken, refreshToken, { email, name, role });
       toast.success(`Welcome back, ${name}!`);
-      navigate('/');
+      navigate(from, { replace: true });
     } catch {
       toast.error('Invalid email or password');
     } finally {

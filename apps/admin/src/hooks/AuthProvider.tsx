@@ -1,23 +1,24 @@
-import { useState, useEffect, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { AuthContext } from './AuthContext';
 import type { AuthUser } from '@my-travelline/shared';
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-
-  useEffect(() => {
-    const stored = localStorage.getItem('user');
-    const token = localStorage.getItem('accessToken');
-    if (stored && token) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        localStorage.removeItem('user');
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-      }
+function loadUserFromStorage(): AuthUser | null {
+  const stored = localStorage.getItem('user');
+  const token = localStorage.getItem('accessToken');
+  if (stored && token) {
+    try {
+      return JSON.parse(stored);
+    } catch {
+      localStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     }
-  }, []);
+  }
+  return null;
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const [user, setUser] = useState<AuthUser | null>(loadUserFromStorage);
 
   const login = (accessToken: string, refreshToken: string, userData: AuthUser) => {
     localStorage.setItem('accessToken', accessToken);
