@@ -6,6 +6,12 @@ beforeEach(() => {
   localStorage.clear();
 });
 
+// React 18 fires window error events for uncaught component errors in addition
+// to console.error. Suppress them globally so the output stays clean.
+beforeAll(() => {
+  window.addEventListener('error', (e) => e.preventDefault());
+});
+
 describe('useAuth', () => {
   it('throws when used outside AuthProvider', () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
