@@ -49,7 +49,8 @@ export default function ImageUploader({ value, onChange, folder, label = 'Cover 
     setPreviewUrl(null);
   };
 
-  const displayUrl = previewUrl ?? (value.startsWith('http') ? value : null);
+  const s3Base = (import.meta.env.VITE_S3_BASE_URL as string | undefined)?.replace(/\/$/, '') ?? '';
+  const displayUrl = previewUrl ?? (value ? (value.startsWith('http') ? value : s3Base ? `${s3Base}/${value}` : null) : null);
 
   return (
     <div>
