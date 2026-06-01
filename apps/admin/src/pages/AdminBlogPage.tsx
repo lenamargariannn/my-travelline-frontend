@@ -5,6 +5,7 @@ import { adminBlogApi } from '@/api/endpoints';
 import type { BlogPost, CreateBlogPostRequest } from '@my-travelline/shared';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Modal from '@/components/ui/Modal';
+import ImageUploader from '@/components/ui/ImageUploader';
 
 const toSlug = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -93,15 +94,12 @@ function BlogForm({ form, onChange }: FormProps) {
         </div>
       </div>
 
-      <div>
-        <label className="input-label">Cover Image Key (S3)</label>
-        <input
-          className="input-field"
-          placeholder="e.g. blog/post-hero.jpg"
-          value={form.coverImage}
-          onChange={e => set({ coverImage: e.target.value })}
-        />
-      </div>
+      <ImageUploader
+        label="Cover Image"
+        folder="blog"
+        value={form.coverImage}
+        onChange={coverImage => set({ coverImage })}
+      />
 
       <label className="flex items-center gap-2 cursor-pointer">
         <input type="checkbox" className="h-4 w-4 accent-primary-600" checked={form.published} onChange={e => set({ published: e.target.checked })} />

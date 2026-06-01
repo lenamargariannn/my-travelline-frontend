@@ -5,6 +5,7 @@ import { adminDestinationsApi } from '@/api/endpoints';
 import type { Destination } from '@my-travelline/shared';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Modal from '@/components/ui/Modal';
+import ImageUploader from '@/components/ui/ImageUploader';
 
 const toSlug = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -76,15 +77,12 @@ function DestinationForm({ form, onChange }: FormProps) {
         <textarea className="input-field" rows={3} value={form.description} onChange={e => set({ description: e.target.value })} />
       </div>
 
-      <div>
-        <label className="input-label">Cover Image Key (S3)</label>
-        <input
-          className="input-field"
-          placeholder="e.g. destinations/paris.jpg"
-          value={form.coverImage}
-          onChange={e => set({ coverImage: e.target.value })}
-        />
-      </div>
+      <ImageUploader
+        label="Cover Image"
+        folder="destinations"
+        value={form.coverImage}
+        onChange={coverImage => set({ coverImage })}
+      />
 
       <label className="flex items-center gap-2 cursor-pointer">
         <input type="checkbox" className="h-4 w-4 accent-primary-600" checked={form.active} onChange={e => set({ active: e.target.checked })} />
