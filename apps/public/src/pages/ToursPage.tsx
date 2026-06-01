@@ -54,7 +54,7 @@ export default function ToursPage() {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-wrap gap-4 mb-8 p-4 bg-secondary-50 rounded-lg">
+        <div className="flex flex-wrap gap-4 mb-8 p-4 bg-[#E8F9FF] rounded-lg">
           <select
             className="input-field max-w-xs"
             value={category}
