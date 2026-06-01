@@ -146,4 +146,4 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 .vite/
 
-/public/logo.png
+/apps/public/public/logo.png
