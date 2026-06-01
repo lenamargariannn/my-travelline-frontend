@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="space-y-4">
-            <img src="/logo.png" alt="My TravelLine" className="h-10 w-auto brightness-0 invert" />
+            <img src="/logo.svg" alt="My TravelLine" className="h-10 w-auto brightness-0 invert" />
             <p className="text-sm italic text-secondary-400">
               Creating Timeless Memories
             </p>

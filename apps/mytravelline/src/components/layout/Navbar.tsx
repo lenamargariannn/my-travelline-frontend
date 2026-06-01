@@ -16,12 +16,12 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
+    <nav className="bg-[#E8F4F8] sticky top-0 z-50">
       <div className="container-main">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <img src="/logo.png" alt="My TravelLine" className="h-10 w-auto" />
+            <img src="/logo.svg" alt="My TravelLine" className="h-10 w-auto" />
           </Link>
 
           {/* Desktop Navigation */}

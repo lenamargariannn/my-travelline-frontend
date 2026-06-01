@@ -12,7 +12,7 @@ my-travelline-frontend/
 │   └── admin/           # Admin dashboard  (admin.my-travelline.com)
 ├── packages/
 │   └── shared/          # @my-travelline/shared — types + LoadingSpinner
-└── public/              # Static assets (logo.png) shared by both apps
+└── public/              # Static assets (logo.svg) shared by both apps
 ```
 
 ## Running locally
@@ -111,7 +111,7 @@ AWS auth uses GitHub OIDC (no stored keys):
 
 ## Brand
 
-**Logo:** `public/logo.png` (served by both apps)
+**Logo:** `public/logo.svg` (served by both apps)
 
 **Colors:**
 - Main text: `#0C0809`

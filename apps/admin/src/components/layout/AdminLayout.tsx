@@ -70,7 +70,7 @@ export default function AdminLayout() {
   const sidebarContent = (
     <>
       <div className="p-5 border-b border-secondary-700 flex items-center gap-3 shrink-0">
-        <img src="/logo.png" alt="My TravelLine" className="h-8 w-auto brightness-0 invert" />
+        <img src="/logo.svg" alt="My TravelLine" className="h-8 w-auto brightness-0 invert" />
         <p className="text-xs text-secondary-400 font-medium tracking-wide uppercase">Admin</p>
       </div>
 

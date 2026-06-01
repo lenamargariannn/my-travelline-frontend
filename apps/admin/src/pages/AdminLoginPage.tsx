@@ -38,7 +38,7 @@ export default function AdminLoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-secondary-50 px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img src="/logo.png" alt="My TravelLine" className="h-14 w-auto mx-auto" />
+          <img src="/logo.svg" alt="My TravelLine" className="h-14 w-auto mx-auto" />
           <p className="text-secondary-500 mt-3">Admin Panel Login</p>
         </div>
 
