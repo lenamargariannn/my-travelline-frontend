@@ -30,6 +30,7 @@ export default function GalleryPage() {
                 src={image.imageUrl}
                 alt={image.caption || 'Gallery image'}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
               <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors" />
               {image.caption && (

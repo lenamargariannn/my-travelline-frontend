@@ -31,7 +31,7 @@ export default function BlogPage() {
             <Link key={post.id} to={`/blog/${post.slug}`} className="card group">
               <div className="h-48 bg-secondary-200 overflow-hidden">
                 {post.coverImage && (
-                  <img src={imageUrl(post.coverImage)} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src={imageUrl(post.coverImage)} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
                 )}
               </div>
               <div className="p-5">

@@ -31,7 +31,7 @@ export default function DestinationsPage() {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10" />
               {dest.coverImage ? (
-                <img src={imageUrl(dest.coverImage)} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src={imageUrl(dest.coverImage)} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
               ) : (
                 <div className="w-full h-full bg-primary-100" />
               )}

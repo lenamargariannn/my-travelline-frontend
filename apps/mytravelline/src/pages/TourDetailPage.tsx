@@ -29,7 +29,7 @@ export default function TourDetailPage() {
       {/* Hero */}
       <section className="relative h-96 bg-secondary-200">
         {tour.coverImage && (
-          <img src={imageUrl(tour.coverImage)} alt={tour.title} className="w-full h-full object-cover" />
+          <img src={imageUrl(tour.coverImage)} alt={tour.title} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 container-main text-white">

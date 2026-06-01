@@ -17,6 +17,7 @@ export default function TourCard({ tour }: TourCardProps) {
             src={imageUrl(tour.coverImage)}
             alt={tour.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-secondary-400">
