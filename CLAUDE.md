@@ -8,7 +8,7 @@ It uses **npm workspaces** and contains two deployable apps and one shared packa
 ```
 my-travelline-frontend/
 ├── apps/
-│   ├── public/          # Customer-facing website  (my-travelline.com)
+│   ├── mytravelline/    # Customer-facing website  (my-travelline.com)
 │   └── admin/           # Admin dashboard  (admin.my-travelline.com)
 ├── packages/
 │   └── shared/          # @my-travelline/shared — types + LoadingSpinner
@@ -19,7 +19,7 @@ my-travelline-frontend/
 
 ```bash
 npm install                      # install all workspaces from root
-cd apps/public && npm run dev    # http://localhost:5173
+cd apps/mytravelline && npm run dev    # http://localhost:5173
 cd apps/admin  && npm run dev    # http://localhost:5174
 ```
 
@@ -33,7 +33,7 @@ Start the backend first: `~/Projects/my-travelline-backend`
 npm run build
 
 # or per app
-cd apps/public && npm run build
+cd apps/mytravelline && npm run build
 cd apps/admin  && npm run build
 ```
 
@@ -65,7 +65,7 @@ import { LoadingSpinner } from '@my-travelline/shared';
 
 The alias is resolved at build time via Vite and TypeScript paths — no build step needed for the shared package.
 
-## apps/public
+## apps/mytravelline
 
 Routes: `/`, `/tours`, `/tours/:slug`, `/destinations`, `/destinations/:slug`,
 `/gallery`, `/blog`, `/blog/:slug`, `/about`, `/contact`
@@ -92,7 +92,7 @@ Workflow: `.github/workflows/frontend-ci.yml`
 |---|---|---|
 | `ci-public` | push / PR to main, develop | lint → typecheck → test → build public app |
 | `ci-admin` | push / PR to main, develop | lint → typecheck → test → build admin app |
-| `deploy-public` | push to main only | upload `apps/public/dist/` → S3 → invalidate CloudFront |
+| `deploy-public` | push to main only | upload `apps/mytravelline/dist/` → S3 → invalidate CloudFront |
 | `deploy-admin` | push to main only | upload `apps/admin/dist/` → S3 → invalidate CloudFront |
 
 AWS auth uses GitHub OIDC (no stored keys):

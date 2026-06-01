@@ -28,19 +28,19 @@ jobs:
         run: npm install
 
       - name: Lint
-        working-directory: apps/public
+        working-directory: apps/mytravelline
         run: npm run lint
 
       - name: Type check
-        working-directory: apps/public
+        working-directory: apps/mytravelline
         run: npx tsc --noEmit
 
       - name: Test
-        working-directory: apps/public
+        working-directory: apps/mytravelline
         run: npm test
 
       - name: Build
-        working-directory: apps/public
+        working-directory: apps/mytravelline
         run: npm run build
         env:
           VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
@@ -49,7 +49,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist-public
-          path: apps/public/dist/
+          path: apps/mytravelline/dist/
           retention-days: 1
 
   ci-admin:
