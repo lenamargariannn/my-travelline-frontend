@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { blogApi } from '@/api/endpoints';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { format } from 'date-fns';
@@ -7,6 +8,7 @@ import { imageUrl } from '@/lib/imageUrl';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useTranslation();
 
   const { data: post, isLoading } = useQuery({
     queryKey: ['blog', slug],
@@ -15,7 +17,7 @@ export default function BlogPostPage() {
   });
 
   if (isLoading) return <LoadingSpinner />;
-  if (!post) return <div className="container-main py-20 text-center">Post not found</div>;
+  if (!post) return <div className="container-main py-20 text-center">{t('blog.notFound')}</div>;
 
   return (
     <div className="section-padding">

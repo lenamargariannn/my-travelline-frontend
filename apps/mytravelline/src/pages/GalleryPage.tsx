@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { galleryApi } from '@/api/endpoints';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function GalleryPage() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(0);
 
   const { data, isLoading } = useQuery({
@@ -17,10 +19,8 @@ export default function GalleryPage() {
     <div className="section-padding">
       <div className="container-main">
         <div className="text-center mb-12">
-          <h1 className="section-title">Gallery</h1>
-          <p className="section-subtitle mx-auto">
-            A visual journey through our most beautiful destinations
-          </p>
+          <h1 className="section-title">{t('gallery.pageTitle')}</h1>
+          <p className="section-subtitle mx-auto">{t('gallery.pageSubtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -28,7 +28,7 @@ export default function GalleryPage() {
             <div key={image.id} className="group relative h-64 rounded-lg overflow-hidden">
               <img
                 src={image.imageUrl}
-                alt={image.caption || 'Gallery image'}
+                alt={image.caption || t('gallery.imageAlt')}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 onError={(e) => { e.currentTarget.style.display = 'none'; }}
               />
@@ -47,9 +47,15 @@ export default function GalleryPage() {
 
         {data && data.totalPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-12">
-            <button className="btn-secondary btn-sm" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</button>
-            <span className="text-sm text-secondary-600">Page {page + 1} of {data.totalPages}</span>
-            <button className="btn-secondary btn-sm" disabled={data.last} onClick={() => setPage(page + 1)}>Next</button>
+            <button className="btn-secondary btn-sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
+              {t('common.previous')}
+            </button>
+            <span className="text-sm text-secondary-600">
+              {t('common.pageOf', { current: page + 1, total: data.totalPages })}
+            </span>
+            <button className="btn-secondary btn-sm" disabled={data.last} onClick={() => setPage(page + 1)}>
+              {t('common.next')}
+            </button>
           </div>
         )}
       </div>

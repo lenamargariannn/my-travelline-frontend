@@ -18,6 +18,18 @@
   h5 {
     @apply font-heading;
   }
+
+  .lang-hy body,
+  .lang-hy h4,
+  .lang-hy h5 {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+  }
+
+  .lang-hy h1,
+  .lang-hy h2,
+  .lang-hy h3 {
+    font-family: 'Noto Sans Armenian', sans-serif;
+  }
 }
 
 @layer components {

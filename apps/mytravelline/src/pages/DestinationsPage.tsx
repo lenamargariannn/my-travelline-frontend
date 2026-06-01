@@ -1,10 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { destinationsApi } from '@/api/endpoints';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { imageUrl } from '@/lib/imageUrl';
 
 export default function DestinationsPage() {
+  const { t } = useTranslation();
+
   const { data: destinations, isLoading } = useQuery({
     queryKey: ['destinations'],
     queryFn: () => destinationsApi.getAll().then((res) => res.data),
@@ -16,10 +19,8 @@ export default function DestinationsPage() {
     <div className="section-padding">
       <div className="container-main">
         <div className="text-center mb-12">
-          <h1 className="section-title">Destinations</h1>
-          <p className="section-subtitle mx-auto">
-            Explore breathtaking destinations around the world
-          </p>
+          <h1 className="section-title">{t('destinations.pageTitle')}</h1>
+          <p className="section-subtitle mx-auto">{t('destinations.pageSubtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

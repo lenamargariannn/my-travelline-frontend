@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { blogApi } from '@/api/endpoints';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { imageUrl } from '@/lib/imageUrl';
 import { format } from 'date-fns';
 
 export default function BlogPage() {
+  const { t } = useTranslation();
   const [page, setPage] = useState(0);
 
   const { data, isLoading } = useQuery({
@@ -20,10 +22,8 @@ export default function BlogPage() {
     <div className="section-padding">
       <div className="container-main">
         <div className="text-center mb-12">
-          <h1 className="section-title">Travel Blog</h1>
-          <p className="section-subtitle mx-auto">
-            Stories, tips, and inspiration for your next adventure
-          </p>
+          <h1 className="section-title">{t('blog.pageTitle')}</h1>
+          <p className="section-subtitle mx-auto">{t('blog.pageSubtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -50,9 +50,15 @@ export default function BlogPage() {
 
         {data && data.totalPages > 1 && (
           <div className="flex justify-center items-center gap-4 mt-12">
-            <button className="btn-secondary btn-sm" disabled={page === 0} onClick={() => setPage(page - 1)}>Previous</button>
-            <span className="text-sm text-secondary-600">Page {page + 1} of {data.totalPages}</span>
-            <button className="btn-secondary btn-sm" disabled={data.last} onClick={() => setPage(page + 1)}>Next</button>
+            <button className="btn-secondary btn-sm" disabled={page === 0} onClick={() => setPage(page - 1)}>
+              {t('common.previous')}
+            </button>
+            <span className="text-sm text-secondary-600">
+              {t('common.pageOf', { current: page + 1, total: data.totalPages })}
+            </span>
+            <button className="btn-secondary btn-sm" disabled={data.last} onClick={() => setPage(page + 1)}>
+              {t('common.next')}
+            </button>
           </div>
         )}
       </div>

@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { destinationsApi, toursApi } from '@/api/endpoints';
 import TourCard from '@/components/ui/TourCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -7,6 +8,7 @@ import { imageUrl } from '@/lib/imageUrl';
 
 export default function DestinationDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useTranslation();
 
   const { data: destination, isLoading } = useQuery({
     queryKey: ['destination', slug],
@@ -21,7 +23,7 @@ export default function DestinationDetailPage() {
   });
 
   if (isLoading) return <LoadingSpinner />;
-  if (!destination) return <div className="container-main py-20 text-center">Destination not found</div>;
+  if (!destination) return <div className="container-main py-20 text-center">{t('destinations.notFound')}</div>;
 
   return (
     <div>
@@ -41,7 +43,9 @@ export default function DestinationDetailPage() {
 
         {tours && tours.content.length > 0 && (
           <div>
-            <h2 className="text-2xl font-heading font-bold mb-6">Tours in {destination.name}</h2>
+            <h2 className="text-2xl font-heading font-bold mb-6">
+              {t('destinations.toursIn', { name: destination.name })}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {tours.content.map((tour) => (
                 <TourCard key={tour.id} tour={tour} />

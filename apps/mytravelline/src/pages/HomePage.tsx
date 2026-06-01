@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { toursApi, destinationsApi, reviewsApi } from '@/api/endpoints';
 import TourCard from '@/components/ui/TourCard';
 import { HiArrowRight } from 'react-icons/hi';
 
 export default function HomePage() {
+  const { t } = useTranslation();
+
   const { data: featuredTours } = useQuery({
     queryKey: ['tours', 'featured'],
     queryFn: () => toursApi.getFeatured().then((res) => res.data),
@@ -26,21 +29,20 @@ export default function HomePage() {
       <section className="relative bg-hero-gradient min-h-[600px] flex items-center">
         <div className="absolute inset-0 bg-black/20" />
         <div className="container-main relative z-10 text-center text-white py-24">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold leading-tight">
-            Creating Timeless
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-heading font-bold leading-[1.25] md:leading-[1.2]">
+            {t('hero.title1')}
             <br />
-            <span className="text-primary-200">Memories</span>
+            <span className="text-primary-200">{t('hero.title2')}</span>
           </h1>
-          <p className="mt-6 text-lg md:text-xl text-white/90 max-w-2xl mx-auto">
-            Discover extraordinary destinations and curated travel experiences
-            designed to create unforgettable moments that last a lifetime.
+          <p className="mt-6 text-lg md:text-xl text-white/90 max-w-2xl mx-auto leading-relaxed md:leading-loose">
+            {t('hero.subtitle')}
           </p>
           <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/tours" className="btn-accent btn-lg">
-              Explore Tours
+              {t('common.exploreTours')}
             </Link>
             <Link to="/contact" className="btn bg-white/10 text-white border-2 border-white/30 hover:bg-white/20 btn-lg">
-              Plan Your Trip
+              {t('common.planYourTrip')}
             </Link>
           </div>
         </div>
@@ -50,9 +52,9 @@ export default function HomePage() {
       <section className="section-padding bg-white">
         <div className="container-main">
           <div className="text-center mb-12">
-            <h2 className="section-title">Featured Tours</h2>
+            <h2 className="section-title">{t('home.featuredTours')}</h2>
             <p className="section-subtitle mx-auto">
-              Hand-picked travel experiences loved by our guests
+              {t('home.featuredToursSubtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -62,7 +64,7 @@ export default function HomePage() {
           </div>
           <div className="text-center mt-12">
             <Link to="/tours" className="btn-secondary inline-flex items-center gap-2">
-              View All Tours <HiArrowRight />
+              {t('common.viewAllTours')} <HiArrowRight />
             </Link>
           </div>
         </div>
@@ -72,9 +74,9 @@ export default function HomePage() {
       <section className="section-padding bg-secondary-50">
         <div className="container-main">
           <div className="text-center mb-12">
-            <h2 className="section-title">Popular Destinations</h2>
+            <h2 className="section-title">{t('home.popularDestinations')}</h2>
             <p className="section-subtitle mx-auto">
-              Explore our most sought-after travel destinations
+              {t('home.popularDestinationsSubtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -100,9 +102,9 @@ export default function HomePage() {
       <section className="section-padding bg-white">
         <div className="container-main">
           <div className="text-center mb-12">
-            <h2 className="section-title">What Our Travelers Say</h2>
+            <h2 className="section-title">{t('home.testimonials')}</h2>
             <p className="section-subtitle mx-auto">
-              Real stories from real travelers
+              {t('home.testimonialsSubtitle')}
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -135,17 +137,17 @@ export default function HomePage() {
       <section className="bg-primary-700 py-16">
         <div className="container-main text-center text-white">
           <h2 className="text-3xl md:text-4xl font-heading font-bold">
-            Ready for Your Next Adventure?
+            {t('home.ctaTitle')}
           </h2>
           <p className="mt-4 text-primary-100 max-w-xl mx-auto">
-            Let us help you plan the perfect trip. Contact our travel experts today.
+            {t('home.ctaSubtitle')}
           </p>
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link to="/contact" className="btn bg-white text-primary-700 hover:bg-primary-50 font-semibold px-8 py-3 rounded-lg">
-              Contact Us
+              {t('common.contactUs')}
             </Link>
             <Link to="/tours" className="btn border-2 border-white text-white hover:bg-white/10 px-8 py-3 rounded-lg">
-              Browse Tours
+              {t('common.browseTours')}
             </Link>
           </div>
         </div>

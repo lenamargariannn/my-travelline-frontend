@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { HiMenu, HiX } from 'react-icons/hi';
-
-const navLinks = [
-  { to: '/', label: 'Home' },
-  { to: '/tours', label: 'Tours' },
-  { to: '/destinations', label: 'Destinations' },
-  { to: '/gallery', label: 'Gallery' },
-  { to: '/blog', label: 'Blog' },
-  { to: '/about', label: 'About' },
-  { to: '/contact', label: 'Contact' },
-];
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useTranslation();
+
+  const navLinks = [
+    { to: '/', label: t('nav.home') },
+    { to: '/tours', label: t('nav.tours') },
+    { to: '/destinations', label: t('nav.destinations') },
+    { to: '/gallery', label: t('nav.gallery') },
+    { to: '/blog', label: t('nav.blog') },
+    { to: '/about', label: t('nav.about') },
+    { to: '/contact', label: t('nav.contact') },
+  ];
 
   return (
     <nav className="bg-[#E8F4F8] sticky top-0 z-50">
@@ -44,10 +47,11 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden md:block">
+          {/* Right side: language switcher + CTA */}
+          <div className="hidden md:flex items-center gap-4">
+            <LanguageSwitcher />
             <Link to="/tours" className="btn-primary btn-sm">
-              Book Now
+              {t('nav.bookNow')}
             </Link>
           </div>
 
@@ -82,12 +86,15 @@ export default function Navbar() {
                   {link.label}
                 </NavLink>
               ))}
+              <div className="px-3">
+                <LanguageSwitcher />
+              </div>
               <Link
                 to="/tours"
                 onClick={() => setIsOpen(false)}
                 className="btn-primary btn-sm text-center mx-3"
               >
-                Book Now
+                {t('nav.bookNow')}
               </Link>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import { toursApi, reviewsApi } from '@/api/endpoints';
 import BookingForm from '@/components/forms/BookingForm';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
@@ -8,6 +9,7 @@ import { HiClock, HiUsers, HiLocationMarker, HiTag } from 'react-icons/hi';
 
 export default function TourDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const { t } = useTranslation();
 
   const { data: tour, isLoading } = useQuery({
     queryKey: ['tour', slug],
@@ -22,7 +24,7 @@ export default function TourDetailPage() {
   });
 
   if (isLoading) return <LoadingSpinner />;
-  if (!tour) return <div className="container-main py-20 text-center">Tour not found</div>;
+  if (!tour) return <div className="container-main py-20 text-center">{t('tours.notFound')}</div>;
 
   return (
     <div>
@@ -45,17 +47,16 @@ export default function TourDetailPage() {
 
       <div className="container-main py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Main Content */}
           <div className="lg:col-span-2 space-y-10">
             {/* Quick Info */}
             <div className="flex flex-wrap gap-6 p-6 bg-secondary-50 rounded-lg">
               <div className="flex items-center gap-2">
                 <HiClock className="h-5 w-5 text-primary-600" />
-                <span className="text-sm">{tour.durationDays} Days</span>
+                <span className="text-sm">{tour.durationDays} {tour.durationDays === 1 ? t('tours.day') : t('tours.days')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <HiUsers className="h-5 w-5 text-primary-600" />
-                <span className="text-sm">Max {tour.maxGroupSize} People</span>
+                <span className="text-sm">{t('tours.maxPeople', { count: tour.maxGroupSize })}</span>
               </div>
               <div className="flex items-center gap-2">
                 <HiLocationMarker className="h-5 w-5 text-primary-600" />
@@ -69,14 +70,14 @@ export default function TourDetailPage() {
 
             {/* Description */}
             <div>
-              <h2 className="text-2xl font-heading font-bold mb-4">About This Tour</h2>
+              <h2 className="text-2xl font-heading font-bold mb-4">{t('tours.aboutThisTour')}</h2>
               <p className="text-secondary-600 leading-relaxed whitespace-pre-line">{tour.description}</p>
             </div>
 
             {/* Itinerary */}
             {tour.itineraryDays && tour.itineraryDays.length > 0 && (
               <div>
-                <h2 className="text-2xl font-heading font-bold mb-6">Itinerary</h2>
+                <h2 className="text-2xl font-heading font-bold mb-6">{t('tours.itinerary')}</h2>
                 <div className="space-y-4">
                   {tour.itineraryDays.map((day) => (
                     <div key={day.id} className="flex gap-4 p-4 bg-secondary-50 rounded-lg">
@@ -96,7 +97,7 @@ export default function TourDetailPage() {
             {/* Reviews */}
             {reviews && reviews.length > 0 && (
               <div>
-                <h2 className="text-2xl font-heading font-bold mb-6">Traveler Reviews</h2>
+                <h2 className="text-2xl font-heading font-bold mb-6">{t('tours.travelerReviews')}</h2>
                 <div className="space-y-4">
                   {reviews.map((review) => (
                     <div key={review.id} className="p-4 border border-secondary-200 rounded-lg">
@@ -120,7 +121,7 @@ export default function TourDetailPage() {
               <div className="card p-6">
                 <div className="text-center mb-6">
                   <span className="text-3xl font-bold text-primary-700">${tour.price?.toLocaleString()}</span>
-                  <span className="text-secondary-500 text-sm"> / person</span>
+                  <span className="text-secondary-500 text-sm"> {t('tours.perPerson')}</span>
                 </div>
                 <BookingForm tourId={tour.id} tourTitle={tour.title} />
               </div>

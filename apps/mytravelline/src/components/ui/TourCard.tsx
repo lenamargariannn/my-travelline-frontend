@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { HiClock, HiLocationMarker } from 'react-icons/hi';
+import { useTranslation } from 'react-i18next';
 import type { TourSummary } from '@my-travelline/shared';
 import { imageUrl } from '@/lib/imageUrl';
 
@@ -8,6 +9,8 @@ interface TourCardProps {
 }
 
 export default function TourCard({ tour }: TourCardProps) {
+  const { t } = useTranslation();
+
   return (
     <Link to={`/tours/${tour.slug}`} className="card group">
       {/* Image */}
@@ -25,7 +28,7 @@ export default function TourCard({ tour }: TourCardProps) {
           </div>
         )}
         {tour.featured && (
-          <span className="absolute top-3 left-3 badge-primary">Featured</span>
+          <span className="absolute top-3 left-3 badge-primary">{t('tours.featured')}</span>
         )}
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-sm font-bold text-primary-700">
           ${tour.price?.toLocaleString()}
@@ -54,10 +57,10 @@ export default function TourCard({ tour }: TourCardProps) {
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-secondary-100">
           <div className="flex items-center text-sm text-secondary-500">
             <HiClock className="h-4 w-4 mr-1" />
-            {tour.durationDays} {tour.durationDays === 1 ? 'Day' : 'Days'}
+            {tour.durationDays} {tour.durationDays === 1 ? t('tours.day') : t('tours.days')}
           </div>
           <span className="text-sm font-medium text-primary-600 group-hover:underline">
-            View Details →
+            {t('tours.viewDetails')} →
           </span>
         </div>
       </div>

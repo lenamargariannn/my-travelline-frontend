@@ -46,8 +46,15 @@ npm run lint      # lints all workspaces
 
 ## Environment variables
 
-Each app reads `VITE_API_BASE_URL` at build time (set in GitHub Actions as `vars.VITE_API_BASE_URL`).
+Each app reads these at build time (set in GitHub Actions as `vars.*`).
 Copy `.env.example` to `.env.local` inside each app for local overrides.
+
+| Variable | Purpose |
+|---|---|
+| `VITE_API_BASE_URL` | Backend base URL (e.g. `http://localhost:8080`) |
+| `VITE_S3_BASE_URL` | S3 bucket base URL for media images (e.g. `https://my-travelline-media-prod.s3.eu-north-1.amazonaws.com`) |
+
+`VITE_S3_BASE_URL` is required for any image to appear. The `imageUrl()` helper in `apps/mytravelline/src/lib/imageUrl.ts` prepends this to raw S3 keys stored in `coverImage` fields. Without it, all images silently render as `src=""` and make no network request.
 
 ## Shared package — @my-travelline/shared
 
@@ -103,6 +110,7 @@ AWS auth uses GitHub OIDC (no stored keys):
 | Variable | Used by |
 |---|---|
 | `VITE_API_BASE_URL` | both build jobs |
+| `VITE_S3_BASE_URL` | both build jobs |
 | `AWS_REGION` | both deploy jobs |
 | `S3_BUCKET_NAME` | deploy-public |
 | `CLOUDFRONT_DISTRIBUTION_ID` | deploy-public |
@@ -117,7 +125,8 @@ AWS auth uses GitHub OIDC (no stored keys):
 - Main text: `#0C0809`
 - Brand blue: `#2E7D9C` (`primary-600` in Tailwind)
 - Brand red: `#CB2912` (`accent-600` in Tailwind)
-- Background: `#E8F9FF`
+- Page background: `#E8F9FF`
+- Hero/navbar background: `#E8F4F8`
 
 **Fonts:** Inter (body), Playfair Display (headings)
 

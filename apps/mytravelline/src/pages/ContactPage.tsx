@@ -1,11 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 import toast from 'react-hot-toast';
 import { contactApi } from '@/api/endpoints';
 import type { CreateContactRequest } from '@my-travelline/shared';
 import { HiMail, HiPhone, HiLocationMarker } from 'react-icons/hi';
 
 export default function ContactPage() {
+  const { t } = useTranslation();
   const {
     register,
     handleSubmit,
@@ -16,11 +18,11 @@ export default function ContactPage() {
   const mutation = useMutation({
     mutationFn: (data: CreateContactRequest) => contactApi.send(data),
     onSuccess: () => {
-      toast.success('Message sent! We will get back to you soon.');
+      toast.success(t('contact.success'));
       reset();
     },
     onError: () => {
-      toast.error('Failed to send message. Please try again.');
+      toast.error(t('contact.error'));
     },
   });
 
@@ -28,21 +30,16 @@ export default function ContactPage() {
     <div className="section-padding">
       <div className="container-main">
         <div className="text-center mb-12">
-          <h1 className="section-title">Contact Us</h1>
-          <p className="section-subtitle mx-auto">
-            Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-          </p>
+          <h1 className="section-title">{t('contact.pageTitle')}</h1>
+          <p className="section-subtitle mx-auto">{t('contact.pageSubtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-5xl mx-auto">
           {/* Contact Info */}
           <div className="space-y-8">
             <div>
-              <h2 className="text-xl font-heading font-bold text-secondary-900 mb-4">Get In Touch</h2>
-              <p className="text-secondary-600">
-                Whether you're planning your dream vacation or have questions about our tours,
-                our travel experts are here to help.
-              </p>
+              <h2 className="text-xl font-heading font-bold text-secondary-900 mb-4">{t('contact.getInTouch')}</h2>
+              <p className="text-secondary-600">{t('contact.getInTouchDesc')}</p>
             </div>
 
             <div className="space-y-4">
@@ -51,7 +48,7 @@ export default function ContactPage() {
                   <HiLocationMarker className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-secondary-800">Address</h3>
+                  <h3 className="font-medium text-secondary-800">{t('contact.addressLabel')}</h3>
                   <p className="text-sm text-secondary-600">123 Travel Street, Suite 100<br />New York, NY 10001</p>
                 </div>
               </div>
@@ -61,7 +58,7 @@ export default function ContactPage() {
                   <HiPhone className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-secondary-800">Phone</h3>
+                  <h3 className="font-medium text-secondary-800">{t('contact.phoneLabel')}</h3>
                   <p className="text-sm text-secondary-600">+1 (123) 456-7890</p>
                 </div>
               </div>
@@ -71,7 +68,7 @@ export default function ContactPage() {
                   <HiMail className="h-5 w-5 text-primary-600" />
                 </div>
                 <div>
-                  <h3 className="font-medium text-secondary-800">Email</h3>
+                  <h3 className="font-medium text-secondary-800">{t('contact.emailLabel')}</h3>
                   <p className="text-sm text-secondary-600">info@mytravelline.com</p>
                 </div>
               </div>
@@ -81,55 +78,51 @@ export default function ContactPage() {
           {/* Contact Form */}
           <form onSubmit={handleSubmit((data) => mutation.mutate(data))} className="space-y-5">
             <div>
-              <label className="input-label">Full Name *</label>
+              <label className="input-label">{t('contact.form.fullName')}</label>
               <input
-                {...register('name', { required: 'Name is required' })}
+                {...register('name', { required: t('contact.form.nameRequired') })}
                 className="input-field"
-                placeholder="John Doe"
+                placeholder={t('contact.form.namePlaceholder')}
               />
               {errors.name && <p className="input-error">{errors.name.message}</p>}
             </div>
 
             <div>
-              <label className="input-label">Email *</label>
+              <label className="input-label">{t('contact.form.email')}</label>
               <input
                 {...register('email', {
-                  required: 'Email is required',
-                  pattern: { value: /^\S+@\S+$/i, message: 'Invalid email' },
+                  required: t('contact.form.emailRequired'),
+                  pattern: { value: /^\S+@\S+$/i, message: t('contact.form.invalidEmail') },
                 })}
                 type="email"
                 className="input-field"
-                placeholder="john@example.com"
+                placeholder={t('contact.form.emailPlaceholder')}
               />
               {errors.email && <p className="input-error">{errors.email.message}</p>}
             </div>
 
             <div>
-              <label className="input-label">Subject</label>
+              <label className="input-label">{t('contact.form.subject')}</label>
               <input
                 {...register('subject')}
                 className="input-field"
-                placeholder="How can we help?"
+                placeholder={t('contact.form.subjectPlaceholder')}
               />
             </div>
 
             <div>
-              <label className="input-label">Message *</label>
+              <label className="input-label">{t('contact.form.message')}</label>
               <textarea
-                {...register('message', { required: 'Message is required' })}
+                {...register('message', { required: t('contact.form.messageRequired') })}
                 rows={5}
                 className="input-field"
-                placeholder="Tell us about your travel plans..."
+                placeholder={t('contact.form.messagePlaceholder')}
               />
               {errors.message && <p className="input-error">{errors.message.message}</p>}
             </div>
 
-            <button
-              type="submit"
-              disabled={mutation.isPending}
-              className="btn-primary w-full"
-            >
-              {mutation.isPending ? 'Sending...' : 'Send Message'}
+            <button type="submit" disabled={mutation.isPending} className="btn-primary w-full">
+              {mutation.isPending ? t('contact.form.sending') : t('contact.form.send')}
             </button>
           </form>
         </div>
