@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { destinationsApi } from '@/api/endpoints';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { imageUrl } from '@/lib/imageUrl';
 
 export default function DestinationsPage() {
   const { data: destinations, isLoading } = useQuery({
@@ -30,7 +31,7 @@ export default function DestinationsPage() {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent z-10" />
               {dest.coverImage ? (
-                <img src={dest.coverImage} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                <img src={imageUrl(dest.coverImage)} alt={dest.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               ) : (
                 <div className="w-full h-full bg-primary-100" />
               )}

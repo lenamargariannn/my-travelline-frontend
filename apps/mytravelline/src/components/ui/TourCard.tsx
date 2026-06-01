@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { HiClock, HiLocationMarker } from 'react-icons/hi';
 import type { TourSummary } from '@my-travelline/shared';
+import { imageUrl } from '@/lib/imageUrl';
 
 interface TourCardProps {
   tour: TourSummary;
@@ -13,7 +14,7 @@ export default function TourCard({ tour }: TourCardProps) {
       <div className="relative h-52 bg-secondary-200 overflow-hidden">
         {tour.coverImage ? (
           <img
-            src={tour.coverImage}
+            src={imageUrl(tour.coverImage)}
             alt={tour.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { destinationsApi, toursApi } from '@/api/endpoints';
 import TourCard from '@/components/ui/TourCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { imageUrl } from '@/lib/imageUrl';
 
 export default function DestinationDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -26,7 +27,7 @@ export default function DestinationDetailPage() {
     <div>
       <section className="relative h-80 bg-secondary-200">
         {destination.coverImage && (
-          <img src={destination.coverImage} alt={destination.name} className="w-full h-full object-cover" />
+          <img src={imageUrl(destination.coverImage)} alt={destination.name} className="w-full h-full object-cover" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-8 container-main text-white">

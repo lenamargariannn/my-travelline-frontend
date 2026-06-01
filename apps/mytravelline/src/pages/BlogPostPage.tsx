@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { blogApi } from '@/api/endpoints';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { format } from 'date-fns';
+import { imageUrl } from '@/lib/imageUrl';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -20,7 +21,7 @@ export default function BlogPostPage() {
     <div className="section-padding">
       <article className="container-main max-w-3xl">
         {post.coverImage && (
-          <img src={post.coverImage} alt={post.title} className="w-full h-72 object-cover rounded-xl mb-8" />
+          <img src={imageUrl(post.coverImage)} alt={post.title} className="w-full h-72 object-cover rounded-xl mb-8" />
         )}
 
         <header className="mb-8">

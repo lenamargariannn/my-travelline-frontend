@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { blogApi } from '@/api/endpoints';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import { imageUrl } from '@/lib/imageUrl';
 import { format } from 'date-fns';
 
 export default function BlogPage() {
@@ -30,7 +31,7 @@ export default function BlogPage() {
             <Link key={post.id} to={`/blog/${post.slug}`} className="card group">
               <div className="h-48 bg-secondary-200 overflow-hidden">
                 {post.coverImage && (
-                  <img src={post.coverImage} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src={imageUrl(post.coverImage)} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 )}
               </div>
               <div className="p-5">
