@@ -1,5 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { CurrencyProvider } from '@/context/CurrencyContext';
 import TourCard from './TourCard';
 import type { TourSummary } from '@my-travelline/shared';
 
@@ -16,11 +18,17 @@ const mockTour: TourSummary = {
   destinationName: 'Paris',
 };
 
+const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+
 const renderCard = (tour: TourSummary = mockTour) =>
   render(
-    <MemoryRouter>
-      <TourCard tour={tour} />
-    </MemoryRouter>
+    <QueryClientProvider client={queryClient}>
+      <CurrencyProvider>
+        <MemoryRouter>
+          <TourCard tour={tour} />
+        </MemoryRouter>
+      </CurrencyProvider>
+    </QueryClientProvider>
   );
 
 describe('TourCard', () => {
