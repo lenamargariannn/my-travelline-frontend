@@ -69,7 +69,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-medium text-secondary-800">{t('contact.emailLabel')}</h3>
-                  <p className="text-sm text-secondary-600">info@mytravelline.com</p>
+                  <p className="text-sm text-secondary-600">contact@my-travelline.com</p>
                 </div>
               </div>
             </div>
