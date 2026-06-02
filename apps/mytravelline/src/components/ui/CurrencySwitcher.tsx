@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useCurrency } from '@/context/CurrencyContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import type { CurrencyCode } from '@/utils/currency';
 
 export default function CurrencySwitcher() {

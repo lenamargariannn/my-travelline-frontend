@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toursApi, categoriesApi, destinationsApi } from '@/api/endpoints';
-import { useCurrency } from '@/context/CurrencyContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import TourCard from '@/components/ui/TourCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 

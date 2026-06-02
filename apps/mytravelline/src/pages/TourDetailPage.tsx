@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toursApi, reviewsApi } from '@/api/endpoints';
-import { useCurrency } from '@/context/CurrencyContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import BookingForm from '@/components/forms/BookingForm';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { imageUrl } from '@/lib/imageUrl';

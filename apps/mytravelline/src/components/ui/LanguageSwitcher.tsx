@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useCurrency } from '@/context/CurrencyContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import type { CurrencyCode } from '@/utils/currency';
 
 const languages = [

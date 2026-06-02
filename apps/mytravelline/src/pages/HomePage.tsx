@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toursApi, destinationsApi, reviewsApi } from '@/api/endpoints';
-import { useCurrency } from '@/context/CurrencyContext';
+import { useCurrency } from '@/hooks/useCurrency';
 import TourCard from '@/components/ui/TourCard';
 import { HiArrowRight } from 'react-icons/hi';
 

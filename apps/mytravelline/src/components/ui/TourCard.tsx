@@ -3,7 +3,7 @@ import { HiClock, HiLocationMarker } from 'react-icons/hi';
 import { useTranslation } from 'react-i18next';
 import type { TourSummary } from '@my-travelline/shared';
 import { imageUrl } from '@/lib/imageUrl';
-import { useCurrency } from '@/context/CurrencyContext';
+import { useCurrency } from '@/hooks/useCurrency';
 
 interface TourCardProps {
   tour: TourSummary;
