@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { destinationsApi, toursApi } from '@/api/endpoints';
+import { useCurrency } from '@/context/CurrencyContext';
 import TourCard from '@/components/ui/TourCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { imageUrl } from '@/lib/imageUrl';
@@ -9,6 +10,7 @@ import { imageUrl } from '@/lib/imageUrl';
 export default function DestinationDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { t } = useTranslation();
+  const { selectedCurrency } = useCurrency();
 
   const { data: destination, isLoading } = useQuery({
     queryKey: ['destination', slug],
@@ -17,8 +19,8 @@ export default function DestinationDetailPage() {
   });
 
   const { data: tours } = useQuery({
-    queryKey: ['tours', 'destination', slug],
-    queryFn: () => toursApi.getAll({ destination: slug!, page: 0, size: 6 }).then((res) => res.data),
+    queryKey: ['tours', 'destination', slug, selectedCurrency],
+    queryFn: () => toursApi.getAll({ destination: slug!, page: 0, size: 6, currency: selectedCurrency }).then((res) => res.data),
     enabled: !!slug,
   });
 

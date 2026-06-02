@@ -3,6 +3,7 @@ import { HiClock, HiLocationMarker } from 'react-icons/hi';
 import { useTranslation } from 'react-i18next';
 import type { TourSummary } from '@my-travelline/shared';
 import { imageUrl } from '@/lib/imageUrl';
+import { useCurrency } from '@/context/CurrencyContext';
 
 interface TourCardProps {
   tour: TourSummary;
@@ -10,6 +11,7 @@ interface TourCardProps {
 
 export default function TourCard({ tour }: TourCardProps) {
   const { t } = useTranslation();
+  const { formatPrice } = useCurrency();
 
   return (
     <Link to={`/tours/${tour.slug}`} className="card group">
@@ -31,7 +33,7 @@ export default function TourCard({ tour }: TourCardProps) {
           <span className="absolute top-3 left-3 badge-primary">{t('tours.featured')}</span>
         )}
         <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded text-sm font-bold text-primary-700">
-          ${tour.price?.toLocaleString()}
+          {formatPrice(tour.convertedPrice ?? tour.price)}
         </div>
       </div>
 

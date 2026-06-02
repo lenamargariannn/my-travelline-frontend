@@ -16,11 +16,11 @@ export const toursApi = {
   getAll: (params?: Record<string, string | number>) =>
     apiClient.get<PageResponse<TourSummary>>('/tours', { params }),
 
-  getFeatured: () =>
-    apiClient.get<TourSummary[]>('/tours/featured'),
+  getFeatured: (currency?: string) =>
+    apiClient.get<TourSummary[]>('/tours/featured', { params: currency ? { currency } : undefined }),
 
-  getBySlug: (slug: string) =>
-    apiClient.get<Tour>(`/tours/${slug}`),
+  getBySlug: (slug: string, currency?: string) =>
+    apiClient.get<Tour>(`/tours/${slug}`, { params: currency ? { currency } : undefined }),
 };
 
 export const categoriesApi = {

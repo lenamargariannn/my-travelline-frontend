@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import App from './App';
 import './i18n';
 import './styles/index.css';
+import { CurrencyProvider } from './context/CurrencyContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,6 +21,7 @@ const queryClient = new QueryClient({
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <QueryClientProvider client={queryClient}>
+      <CurrencyProvider>
       <BrowserRouter>
         <App />
         <Toaster
@@ -33,6 +35,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           }}
         />
       </BrowserRouter>
+      </CurrencyProvider>
     </QueryClientProvider>
   </React.StrictMode>
 );

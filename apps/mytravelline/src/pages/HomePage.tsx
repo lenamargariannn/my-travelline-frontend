@@ -2,15 +2,17 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toursApi, destinationsApi, reviewsApi } from '@/api/endpoints';
+import { useCurrency } from '@/context/CurrencyContext';
 import TourCard from '@/components/ui/TourCard';
 import { HiArrowRight } from 'react-icons/hi';
 
 export default function HomePage() {
   const { t } = useTranslation();
+  const { selectedCurrency } = useCurrency();
 
   const { data: featuredTours } = useQuery({
-    queryKey: ['tours', 'featured'],
-    queryFn: () => toursApi.getFeatured().then((res) => res.data),
+    queryKey: ['tours', 'featured', selectedCurrency],
+    queryFn: () => toursApi.getFeatured(selectedCurrency).then((res) => res.data),
   });
 
   const { data: destinations } = useQuery({

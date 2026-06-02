@@ -22,6 +22,8 @@ export interface Tour {
   summary: string;
   description: string;
   price: number;
+  convertedPrice?: number;
+  convertedCurrency?: string;
   durationDays: number;
   maxGroupSize: number;
   coverImage: string;
@@ -43,6 +45,8 @@ export interface TourSummary {
   title: string;
   summary: string;
   price: number;
+  convertedPrice?: number;
+  convertedCurrency?: string;
   durationDays: number;
   coverImage: string;
   featured: boolean;

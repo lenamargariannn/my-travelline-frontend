@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toursApi, reviewsApi } from '@/api/endpoints';
+import { useCurrency } from '@/context/CurrencyContext';
 import BookingForm from '@/components/forms/BookingForm';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { imageUrl } from '@/lib/imageUrl';
@@ -10,10 +11,11 @@ import { HiClock, HiUsers, HiLocationMarker, HiTag } from 'react-icons/hi';
 export default function TourDetailPage() {
   const { slug } = useParams<{ slug: string }>();
   const { t } = useTranslation();
+  const { selectedCurrency, formatPrice } = useCurrency();
 
   const { data: tour, isLoading } = useQuery({
-    queryKey: ['tour', slug],
-    queryFn: () => toursApi.getBySlug(slug!).then((res) => res.data),
+    queryKey: ['tour', slug, selectedCurrency],
+    queryFn: () => toursApi.getBySlug(slug!, selectedCurrency).then((res) => res.data),
     enabled: !!slug,
   });
 
@@ -120,7 +122,9 @@ export default function TourDetailPage() {
             <div className="sticky top-24 space-y-6">
               <div className="card p-6">
                 <div className="text-center mb-6">
-                  <span className="text-3xl font-bold text-primary-700">${tour.price?.toLocaleString()}</span>
+                  <span className="text-3xl font-bold text-primary-700">
+                    {formatPrice(tour.convertedPrice ?? tour.price)}
+                  </span>
                   <span className="text-secondary-500 text-sm"> {t('tours.perPerson')}</span>
                 </div>
                 <BookingForm tourId={tour.id} tourTitle={tour.title} />

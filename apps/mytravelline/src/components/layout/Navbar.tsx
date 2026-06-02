@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { HiMenu, HiX } from 'react-icons/hi';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
+import CurrencySwitcher from '@/components/ui/CurrencySwitcher';
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -47,9 +48,10 @@ export default function Navbar() {
             ))}
           </div>
 
-          {/* Right side: language switcher + CTA */}
+          {/* Right side: language switcher + currency switcher + CTA */}
           <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher />
+            <CurrencySwitcher />
             <Link to="/tours" className="btn-primary btn-sm">
               {t('nav.bookNow')}
             </Link>
@@ -86,8 +88,9 @@ export default function Navbar() {
                   {link.label}
                 </NavLink>
               ))}
-              <div className="px-3">
+              <div className="px-3 flex items-center gap-2">
                 <LanguageSwitcher />
+                <CurrencySwitcher />
               </div>
               <Link
                 to="/tours"

@@ -3,11 +3,13 @@ import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { toursApi, categoriesApi, destinationsApi } from '@/api/endpoints';
+import { useCurrency } from '@/context/CurrencyContext';
 import TourCard from '@/components/ui/TourCard';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
 export default function ToursPage() {
   const { t } = useTranslation();
+  const { selectedCurrency } = useCurrency();
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(0);
 
@@ -16,10 +18,10 @@ export default function ToursPage() {
   const search = searchParams.get('search') || '';
 
   const { data: toursData, isLoading } = useQuery({
-    queryKey: ['tours', page, category, destination, search],
+    queryKey: ['tours', page, category, destination, search, selectedCurrency],
     queryFn: () =>
       toursApi
-        .getAll({ page, size: 12, ...(category && { category }), ...(destination && { destination }), ...(search && { search }) })
+        .getAll({ page, size: 12, currency: selectedCurrency, ...(category && { category }), ...(destination && { destination }), ...(search && { search }) })
         .then((res) => res.data),
   });
 
