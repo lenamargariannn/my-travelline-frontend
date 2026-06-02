@@ -1,3 +1,115 @@
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHK_AidaExtLht.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHK_AidaExtLht_It.otf') format('opentype');
+  font-weight: 200;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-LightItalic.otf') format('opentype');
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHK_Aida.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHK_Aida_It.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-Medium.otf') format('opentype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-MediumItalic.otf') format('opentype');
+  font-weight: 500;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-SemiBold.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-SemiBoldItalic.otf') format('opentype');
+  font-weight: 600;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-DemiBold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAida-DemiBoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAidaBld.otf') format('opentype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SHKAida';
+  src: url('@/assets/fonts/SHKAidaBld_It.otf') format('opentype');
+  font-weight: 800;
+  font-style: italic;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -19,17 +131,6 @@
     @apply font-heading;
   }
 
-  .lang-hy body,
-  .lang-hy h4,
-  .lang-hy h5 {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-  }
-
-  .lang-hy h1,
-  .lang-hy h2,
-  .lang-hy h3 {
-    font-family: 'Noto Sans Armenian', sans-serif;
-  }
 }
 
 @layer components {
@@ -129,4 +230,48 @@
   .badge-danger {
     @apply badge bg-accent-100 text-accent-800;
   }
+}
+
+/* Tighter Inter for Armenian body text */
+.lang-hy p,
+.lang-hy span,
+.lang-hy a,
+.lang-hy button,
+.lang-hy input,
+.lang-hy label,
+.lang-hy li,
+.lang-hy td,
+.lang-hy th {
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+/* Compact body text for Russian */
+.lang-ru p,
+.lang-ru span,
+.lang-ru a,
+.lang-ru button,
+.lang-ru input,
+.lang-ru label,
+.lang-ru li,
+.lang-ru td,
+.lang-ru th {
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+/* Armenian h1 size reduction */
+.lang-hy h1 {
+  font-size: 3.5em;
+}
+
+/* Armenian headings only — replaces Playfair Display, body stays Inter */
+.lang-hy h1,
+.lang-hy h2,
+.lang-hy h3,
+.lang-hy h4,
+.lang-hy h5,
+.lang-hy .section-title,
+.lang-hy .font-heading {
+  font-family: 'SHKAida', serif !important;
 }

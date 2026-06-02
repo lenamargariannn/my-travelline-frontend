@@ -27,4 +27,11 @@ i18n
     },
   });
 
+i18n.on('languageChanged', (lng) => {
+  document.documentElement.classList.remove('lang-en', 'lang-hy', 'lang-ru');
+  document.documentElement.classList.add(`lang-${lng}`);
+});
+
+document.documentElement.classList.add(`lang-${i18n.language}`);
+
 export default i18n;

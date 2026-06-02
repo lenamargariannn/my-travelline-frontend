@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
 import PublicLayout from '@/components/layout/PublicLayout';
 
 import HomePage from '@/pages/HomePage';
@@ -16,13 +14,6 @@ import ContactPage from '@/pages/ContactPage';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 function App() {
-  const { i18n } = useTranslation();
-
-  useEffect(() => {
-    const lang = i18n.language?.split('-')[0];
-    document.documentElement.classList.toggle('lang-hy', lang === 'hy');
-  }, [i18n.language]);
-
   return (
     <Routes>
       <Route element={<PublicLayout />}>
