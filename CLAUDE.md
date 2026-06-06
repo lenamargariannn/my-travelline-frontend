@@ -12,7 +12,7 @@ my-travelline-frontend/
 │   └── admin/           # Admin dashboard  (admin.my-travelline.com)
 ├── packages/
 │   └── shared/          # @my-travelline/shared — types + LoadingSpinner
-└── public/              # Static assets (logo.svg) shared by both apps
+└── public/              # Static assets (logo.svg, logo.png) shared by both apps
 ```
 
 ## Running locally
@@ -53,6 +53,7 @@ Copy `.env.example` to `.env.local` inside each app for local overrides.
 |---|---|
 | `VITE_API_BASE_URL` | Backend base URL (e.g. `http://localhost:8080`) |
 | `VITE_S3_BASE_URL` | S3 bucket base URL for media images (e.g. `https://my-travelline-media-prod.s3.eu-north-1.amazonaws.com`) |
+| `VITE_DEFAULT_CURRENCY` | Default currency code (e.g. `USD`). Falls back to `USD` if unset. |
 
 `VITE_S3_BASE_URL` is required for any image to appear. The `imageUrl()` helper in `apps/mytravelline/src/lib/imageUrl.ts` prepends this to raw S3 keys stored in `coverImage` fields. Without it, all images silently render as `src=""` and make no network request.
 
@@ -80,6 +81,56 @@ Routes: `/`, `/tours`, `/tours/:slug`, `/destinations`, `/destinations/:slug`,
 - No authentication
 - Simple Axios client (`src/api/client.ts`) — no JWT interceptors
 - Public API endpoints only (`src/api/endpoints.ts`)
+
+### Key components
+
+| File | Purpose |
+|---|---|
+| `src/components/PageShell.tsx` | Wraps every page — renders `PageBackground`, `Navbar`, `<main>`, `Footer` |
+| `src/components/Navbar.tsx` | Sticky navbar with language switcher, currency switcher, Book Now CTA |
+| `src/components/Footer.tsx` | Glass footer strip with logo + copyright + Privacy/Terms/Support links |
+| `src/components/PageBackground.tsx` | Fixed-position gradient background + accent orbs |
+| `src/components/ui/T.tsx` | Translatable element wrapper — adds `data-translatable="true"` for language-change animation |
+| `src/components/ui/TourCard.tsx` | Tour card used on Home and Tours pages |
+
+### Internationalisation (i18n)
+
+The public app supports **three locales: English (`en`), Armenian (`hy`), Russian (`ru`)**.
+
+- Locale files: `src/locales/{en,hy,ru}/translation.json`
+- Library: `react-i18next`, initialised in `src/i18n.ts`
+- Preferred language is persisted in `localStorage` under key `i18n_language`
+
+**Adding or updating translated strings:**
+1. Add the key + English value to `src/locales/en/translation.json`
+2. Add the Armenian translation to `src/locales/hy/translation.json`
+3. Add the Russian translation to `src/locales/ru/translation.json`
+4. Use `t('key')` in components
+
+**`T` component** (`src/components/ui/T.tsx`):
+Wrap any visible translated string in `<T>` so it participates in the language-change animation. It renders as `<span>` by default; use `as` prop to change the tag.
+
+```tsx
+<T as="h2">{t('home.featuredTours')}</T>
+<T>{t('common.exploreTours')}</T>
+```
+
+Do **not** wrap dynamic data (tour names, prices, API content) in `<T>` — only wrap `t()` calls.
+
+**Language transition animation** (`src/context/LanguageTransitionContext.tsx`):
+All `[data-translatable]` elements fade out simultaneously, the language switches while invisible, then they stagger back in over 160ms. Triggered via `useLangTransition().triggerChange(lang)`. The `busy` flag is exposed to disable language buttons during the transition.
+
+Animation keyframes are defined in `src/styles/global.css`:
+- `langOut` — uniform fade out (0.15s ease-in, no stagger)
+- `langIn` — fade + translateY(4px) in (0.22s ease-out, staggered via `--lang-delay` CSS custom property)
+
+### Currency system
+
+- Context: `src/context/CurrencyContext.tsx` + `src/context/currencyContextDef.ts`
+- Hook: `src/hooks/useCurrency.ts` — exposes `selectedCurrency`, `setCurrency`, `formatPrice`
+- Utility: `src/utils/currency.ts` — `SUPPORTED_CURRENCIES` list, `formatPrice()` formatter
+- Persisted in `localStorage` under key `preferred_currency`
+- API calls pass `currency` param so the backend returns pre-converted prices in `convertedPrice`
 
 ## apps/admin
 
@@ -121,7 +172,7 @@ AWS auth uses GitHub OIDC (no stored keys):
 
 ## Brand
 
-**Logo:** `public/logo.svg` (served by both apps). Always render using the actual SVG
+**Logo:** `public/logo.svg` (and `logo.png`). Always render using the actual SVG
 file — never substitute with text or a placeholder div.
 
 **Colors — CSS custom properties (define in `:root` of every page):**
@@ -218,7 +269,8 @@ box-shadow:    0 6px 40px rgba(46,125,156,0.12),
 - `border-bottom: 1px solid rgba(255,255,255,0.75)`
 - Active nav link: `border-bottom: 1.5px solid var(--teal)` underline
 - Language buttons: `32×32px`, `border-radius: 8px`, border `var(--ink-18)`;
-  active state: `background: rgba(46,125,156,0.10)`, border `rgba(46,125,156,0.40)`
+  active state: `background: rgba(46,125,156,0.10)`, border `rgba(46,125,156,0.40)`;
+  disabled (during language transition): `opacity: 0.55`, `cursor: not-allowed`
 - Currency pill: same 8px radius, matches language button style
 - "Book Now" CTA: `background: var(--red)`, `border-radius: 8px`, Nunito 600,
   `box-shadow: 0 3px 14px rgba(203,41,18,0.28)`, hover lift + stronger shadow
@@ -249,7 +301,14 @@ Hover: `background: rgba(255,255,255,0.78)`, `translateY(-2px)`.
 
 ### Eyebrow labels
 
-Appear above section headings to provide context:
+Appear above section headings to provide context. Always wrap in `<T>` and use a
+translation key — never hardcode the string:
+
+```tsx
+<T as="span" className="eyebrow" style={{ display: 'inline-block', marginBottom: 12 }}>
+  {t('section.eyebrow')}
+</T>
+```
 
 ```css
 display: inline-block;
@@ -292,8 +351,12 @@ Card body: padding 18px 20px. Destination label: Noto Sans 500, 10.5px, uppercas
 `color: var(--ink-35)`. Title: Nunito 700, 18px, `color: var(--ink)`.
 Price: Nunito 800, 20px, `color: var(--teal)`.
 
+**TourCard footer** — stacked vertically: price → duration → CTA button. Never
+put price and button side-by-side (long translations overflow on smaller cards).
+
 Card footer CTA button (small, inline):
 ```css
+display: inline-block;
 background: rgba(46,125,156,0.10);
 border: 1px solid rgba(46,125,156,0.20);
 border-radius: 8px;
@@ -302,13 +365,15 @@ font-family: 'Nunito'; font-size: 12px; font-weight: 600; color: var(--teal);
 
 ### Animations
 
-Use these named keyframes consistently across all pages:
+Use these named keyframes consistently across all pages (defined in `src/styles/global.css`):
 
 ```css
 @keyframes fadeUp   { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
 @keyframes slideDown{ from { opacity:0; transform:translateY(-16px);} to { opacity:1; transform:translateY(0); } }
 @keyframes sweep    { 0%{left:-100%;} 55%,100%{left:160%;} }
 @keyframes pulse    { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.45);} 70%{box-shadow:0 0 0 6px rgba(34,197,94,0);} 100%{box-shadow:0 0 0 0 rgba(34,197,94,0);} }
+@keyframes langOut  { from { opacity:1; } to { opacity:0; } }
+@keyframes langIn   { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
 ```
 
 Stagger page load with `animation-delay` increments of ~0.12–0.15s per element.
@@ -338,20 +403,20 @@ hero search-bar pattern on inner pages.
 ### `/` — Home
 
 - **Hero:** Full-viewport centered layout. Large Nunito display headline split
-  across two lines (`font-weight: 300` first line, `font-weight: 800 italic` accent
-  word). Eyebrow pill. Two CTA buttons. Integrated search bar (destination /
-  departure / travelers) flush-connected to a 4-column stats strip below it.
-  Three small absolute-positioned floating glass data cards on the sides.
+  across two lines (`font-weight: 400 italic` first line full-viewport-width,
+  `font-weight: 400 italic` accent word). Eyebrow pill. Two CTA buttons. Integrated
+  search bar (destination / departure / travelers) flush-connected to a 4-column
+  stats strip below it. Three small absolute-positioned floating glass data cards
+  on the sides.
 - **Featured Tours:** 3-column card grid inside a glass section panel.
 - **Why Us:** 2-column layout — editorial copy left, 2×2 feature tile grid right.
   Feature tiles use **text only** (bold title + short description) — no icons.
 
 ### `/tours` — Tour listing
 
-- **Page header:** Left-aligned. Eyebrow + h1 ("All Tours"). Short subheading.
-  Right side: filter/sort controls as glass pill selectors (no icons).
-- **Layout:** Masonry-style or 3-column grid. Cards use real tour images.
-  Filter sidebar optional — if present, it is a glass panel flush-left.
+- **Page header:** Centered. Eyebrow + h1. Short subheading.
+- **Layout:** 3-column grid. Cards use real tour images.
+  Filter bar above the grid — glass panel with category, destination, and search selectors.
 - **No hero banner** — the fixed background gradient provides atmosphere.
 
 ### `/tours/:slug` — Tour detail
@@ -359,12 +424,12 @@ hero search-bar pattern on inner pages.
 - **Layout:** 2-column above the fold — left ~58% is the tour image hero (full
   bleed, rounded corners, real photo from S3). Right ~38% is a glass booking
   panel: price, duration, group size, "Book Now" primary CTA, "Enquire" secondary.
-- **Below fold:** Full-width glass section panels for itinerary (numbered days,
-  no icons — just day number + title + description), inclusions/exclusions
-  (two-column text lists with a thin teal left-border accent on included items),
-  and a reviews strip.
+- **Below fold:** Full-width glass section panels for description, itinerary
+  (numbered days, no icons — just day number + title + description), and reviews.
 - **Itinerary days:** Numbered with a large Nunito 800 day number in `var(--teal)`,
   no icons.
+- **Booking panel labels** (Duration, Group size, Destination, Category) use
+  `t('tours.detail.*')` keys — never hardcoded.
 
 ### `/destinations` — Destinations listing
 
@@ -379,23 +444,22 @@ hero search-bar pattern on inner pages.
 - **Hero:** Full-width image strip (560px tall) with the destination name as a
   large Nunito 700 overlay, centered, white, with a subtle dark gradient at the
   bottom of the image.
-- **Below:** 2-column layout — left is editorial prose (history, culture, tips),
-  right is a sticky glass sidebar showing tours available to that destination.
+- **Below:** 2-column layout — left is editorial prose, right is a sticky glass
+  sidebar showing tours available to that destination.
 
 ### `/gallery`
 
-- **Layout:** Responsive CSS grid masonry (3–4 columns). No cards — images tile
+- **Layout:** Responsive CSS grid masonry (4 columns). No cards — images tile
   edge-to-edge with `gap: 4px`. Hovering an image shows a glass overlay with the
   caption, no icons.
-- **Page header:** Minimal — just eyebrow + h1 + subheading, centered,
-  above the grid.
+- **Page header:** Minimal — just eyebrow + h1 + subheading, centered, above the grid.
 
 ### `/blog`
 
 - **Layout:** Featured article at top (full-width card, image left ~45%, text right).
   Below: 3-column card grid of remaining posts.
-- **Post cards:** Image, category eyebrow pill (text only), title in Nunito 600,
-  date + reading time in Noto Sans 300 — no icons for date or time.
+- **Post cards:** Image, category eyebrow pill (dynamic tag from API), title in
+  Nunito 600, date + reading time in Noto Sans 300 — no icons for date or time.
 
 ### `/blog/:slug` — Blog post
 
@@ -411,19 +475,23 @@ hero search-bar pattern on inner pages.
 - **Layout:** Hero is a split panel — left: large editorial headline + 2 paragraphs
     + primary CTA. Right: a `2×2` glass stat grid (15 years / 85+ destinations /
       12K+ travelers / 4.9 rating) using Nunito 800 numbers, no icons.
-- **Below:** Full-width team section — horizontal scrollable strip of staff glass
-  cards. Name + role in text only, no avatar icons (use real photos or colored
-  initials circle with Nunito 600 initials).
+  Stat labels use `t('about.stats.*')` keys.
+- **Below:** Values section (4-column tile grid, text only), then full-width team
+  section — horizontal scrollable strip of staff glass cards with colored initials
+  circles (Nunito 600 initials, no avatar icons).
 
 ### `/contact`
 
-- **Layout:** 2-column. Left: glass form panel (name, email, phone, message textarea,
-  submit CTA). Right: glass info panel with address, working hours, and an embedded
-  static map placeholder. No icons for the info items — use small Noto Sans 500
-  labels ("Address", "Hours") as column labels instead.
+- **Layout:** 2-column, `maxWidth: 860px`. Left: glass form panel (name, email,
+  subject, message textarea × 4 rows, submit CTA). Right: glass info panel with
+  address, phone, email, hours — and the **brand logo** (`/logo.svg`) filling the
+  remaining height below the info rows.
+- Both panels use `padding: 32px`, `borderRadius: 20px`, heading `fontSize: 24px`.
 - **Form inputs:** `border-radius: 8px`, `border: 1px solid var(--ink-18)`,
   `background: rgba(255,255,255,0.55)`, `backdrop-filter: blur(10px)`.
   Focus state: `border-color: var(--teal)`, `box-shadow: 0 0 0 3px rgba(46,125,156,0.12)`.
+- Right panel is `display: flex; flex-direction: column` so the logo area uses
+  `flex: 1; minHeight: 80px` to fill remaining height without hardcoding sizes.
 
 ---
 
@@ -439,8 +507,9 @@ background: rgba(255,255,255,0.25);
 backdrop-filter: blur(20px);
 ```
 
-Left: logo mark (the circular `M` from the brand mark) + copyright.
+Left: logo mark + copyright.
 Right: Privacy · Terms · Support links, Noto Sans 13px, `color: var(--ink-35)`.
+All link text uses `t('footer.privacy')`, `t('footer.terms')`, `t('footer.support')`.
 No social icons.
 
 ---
@@ -458,6 +527,9 @@ No social icons.
   re-exported from `packages/shared/src/index.ts`
 - The CI pipeline uses `--max-warnings 0` — fix all TypeScript and ESLint warnings
   before committing
+- **All visible text must use `t()` — no hardcoded strings in JSX.** Wrap `t()` calls
+  in `<T>` so they animate during language transitions. Dynamic API data (tour titles,
+  prices, names from the backend) does not need `<T>`.
 
 ## Related projects
 

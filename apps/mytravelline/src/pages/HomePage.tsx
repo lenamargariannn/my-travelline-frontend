@@ -86,7 +86,7 @@ export default function HomePage() {
           <h1
             style={{
               fontFamily: "'Nunito', sans-serif",
-              fontSize: 'clamp(52px, 7.5vw, 88px)',
+              fontSize: 'clamp(42px, 6.2vw, 74px)',
               letterSpacing: '-0.03em',
               lineHeight: 1.05,
               color: 'var(--ink)',
