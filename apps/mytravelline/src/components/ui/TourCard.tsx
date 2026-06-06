@@ -97,8 +97,8 @@ export default function TourCard({ tour }: TourCardProps) {
         </p>
 
         {/* Footer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
+          <div style={{ flexShrink: 0 }}>
             <div style={{
               fontFamily: "'Nunito', sans-serif",
               fontSize: 20,
@@ -127,6 +127,7 @@ export default function TourCard({ tour }: TourCardProps) {
             border: '1px solid rgba(46,125,156,0.20)',
             borderRadius: 8,
             padding: '6px 12px',
+            flexShrink: 0,
           }}>
             {t('tours.viewDetails')} →
           </span>
