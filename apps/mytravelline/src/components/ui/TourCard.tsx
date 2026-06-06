@@ -97,28 +97,28 @@ export default function TourCard({ tour }: TourCardProps) {
         </p>
 
         {/* Footer */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
-          <div style={{ flexShrink: 0 }}>
-            <div style={{
-              fontFamily: "'Nunito', sans-serif",
-              fontSize: 20,
-              fontWeight: 800,
-              color: 'var(--teal)',
-              letterSpacing: '-0.01em',
-              lineHeight: 1,
-            }}>
-              {formatPrice(tour.convertedPrice ?? tour.price)}
-            </div>
-            <div style={{
-              fontFamily: "'Noto Sans', sans-serif",
-              fontSize: 11,
-              color: 'var(--ink-35)',
-              marginTop: 2,
-            }}>
-              {tour.durationDays} {tour.durationDays === 1 ? t('tours.day') : t('tours.days')}
-            </div>
+        <div>
+          <div style={{
+            fontFamily: "'Nunito', sans-serif",
+            fontSize: 20,
+            fontWeight: 800,
+            color: 'var(--teal)',
+            letterSpacing: '-0.01em',
+            lineHeight: 1,
+          }}>
+            {formatPrice(tour.convertedPrice ?? tour.price)}
+          </div>
+          <div style={{
+            fontFamily: "'Noto Sans', sans-serif",
+            fontSize: 11,
+            color: 'var(--ink-35)',
+            marginTop: 2,
+            marginBottom: 12,
+          }}>
+            {tour.durationDays} {tour.durationDays === 1 ? t('tours.day') : t('tours.days')}
           </div>
           <span style={{
+            display: 'inline-block',
             fontFamily: "'Nunito', sans-serif",
             fontSize: 12,
             fontWeight: 600,
@@ -127,7 +127,6 @@ export default function TourCard({ tour }: TourCardProps) {
             border: '1px solid rgba(46,125,156,0.20)',
             borderRadius: 8,
             padding: '6px 12px',
-            flexShrink: 0,
           }}>
             {t('tours.viewDetails')} →
           </span>
