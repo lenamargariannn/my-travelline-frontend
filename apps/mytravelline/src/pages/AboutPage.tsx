@@ -1,71 +1,274 @@
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { HiGlobe, HiHeart, HiShieldCheck, HiSparkles } from 'react-icons/hi';
+import PageShell from '@/components/PageShell';
+import T from '@/components/ui/T';
+
+const TEAM = [
+  { name: 'Anna Petrosyan', role: 'Founder & CEO', initials: 'AP' },
+  { name: 'David Harutyunyan', role: 'Head of Operations', initials: 'DH' },
+  { name: 'Mariam Grigoryan', role: 'Travel Designer', initials: 'MG' },
+  { name: 'Armen Mkrtchyan', role: 'Local Expert', initials: 'AM' },
+  { name: 'Narine Sargsyan', role: 'Customer Success', initials: 'NS' },
+];
+
+const STAT_VALUES = ['15', '85+', '12K+', '4.9★'];
+const STAT_KEYS = ['about.stats.years', 'about.stats.destinations', 'about.stats.travelers', 'about.stats.rating'] as const;
 
 export default function AboutPage() {
   const { t } = useTranslation();
-
-  const values = [
-    { icon: HiGlobe, titleKey: 'about.values.expertCurated', descKey: 'about.values.expertCuratedDesc' },
-    { icon: HiHeart, titleKey: 'about.values.personalized', descKey: 'about.values.personalizedDesc' },
-    { icon: HiShieldCheck, titleKey: 'about.values.safeSecure', descKey: 'about.values.safeSecureDesc' },
-    { icon: HiSparkles, titleKey: 'about.values.unforgettable', descKey: 'about.values.unforgettableDesc' },
-  ];
+  const STATS = STAT_KEYS.map((key, i) => ({ value: STAT_VALUES[i], label: t(key) }));
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="bg-hero-gradient py-20">
-        <div className="container-main text-center text-white">
-          <h1 className="text-4xl md:text-5xl font-heading font-bold">{t('about.hero.title')}</h1>
-          <p className="mt-4 text-xl text-primary-100 italic">{t('about.hero.subtitle')}</p>
-        </div>
-      </section>
+    <PageShell>
+      {/* ── Hero panel: 2-column ── */}
+      <section className="section" style={{ animation: 'fadeUp 0.7s ease both' }}>
+        <div
+          className="section-inner glass"
+          style={{ padding: '56px 60px', borderRadius: 20 }}
+        >
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gap: 64,
+              alignItems: 'center',
+            }}
+          >
+            {/* Left — editorial text */}
+            <div>
+              <T as="span" className="eyebrow" style={{ display: 'inline-block', marginBottom: 16 }}>{t('about.storyEyebrow')}</T>
+              <T as="h1"
+                style={{
+                  fontFamily: "'Nunito', sans-serif",
+                  fontSize: 'clamp(36px, 5vw, 60px)',
+                  fontWeight: 700,
+                  color: 'var(--ink)',
+                  letterSpacing: '-0.02em',
+                  lineHeight: 1.1,
+                  marginBottom: 20,
+                }}
+              >
+                {t('about.hero.title')}
+              </T>
+              <T as="p"
+                style={{
+                  fontFamily: "'Noto Sans', sans-serif",
+                  fontSize: 15,
+                  fontWeight: 300,
+                  color: 'var(--ink-60)',
+                  lineHeight: 1.75,
+                  marginBottom: 12,
+                }}
+              >
+                {t('about.story.p1')}
+              </T>
+              <T as="p"
+                style={{
+                  fontFamily: "'Noto Sans', sans-serif",
+                  fontSize: 15,
+                  fontWeight: 300,
+                  color: 'var(--ink-60)',
+                  lineHeight: 1.75,
+                  marginBottom: 32,
+                }}
+              >
+                {t('about.story.p2')}
+              </T>
+              <Link to="/contact" className="btn-primary"><T>{t('about.cta.button')}</T> →</Link>
+            </div>
 
-      {/* Story */}
-      <section className="section-padding">
-        <div className="container-main max-w-4xl">
-          <div className="text-center mb-12">
-            <h2 className="section-title">{t('about.story.title')}</h2>
-          </div>
-          <div className="text-secondary-600 space-y-4 leading-relaxed">
-            <p>{t('about.story.p1')}</p>
-            <p>{t('about.story.p2')}</p>
-            <p>{t('about.story.p3')}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="section-padding bg-secondary-50">
-        <div className="container-main">
-          <div className="text-center mb-12">
-            <h2 className="section-title">{t('about.values.title')}</h2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {values.map((item) => (
-              <div key={item.titleKey} className="text-center p-6">
-                <div className="w-14 h-14 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <item.icon className="h-7 w-7 text-primary-600" />
+            {/* Right — 2×2 stat grid */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: 16,
+              }}
+            >
+              {STATS.map(({ value, label }) => (
+                <div
+                  key={label}
+                  className="glass"
+                  style={{
+                    padding: '32px 24px',
+                    textAlign: 'center',
+                    borderRadius: 16,
+                  }}
+                >
+                  <div
+                    style={{
+                      fontFamily: "'Nunito', sans-serif",
+                      fontSize: 44,
+                      fontWeight: 800,
+                      color: 'var(--teal)',
+                      letterSpacing: '-0.03em',
+                      lineHeight: 1,
+                      marginBottom: 8,
+                    }}
+                  >
+                    {value}
+                  </div>
+                  <T as="div"
+                    style={{
+                      fontFamily: "'Noto Sans', sans-serif",
+                      fontSize: 13,
+                      fontWeight: 300,
+                      color: 'var(--ink-60)',
+                    }}
+                  >
+                    {label}
+                  </T>
                 </div>
-                <h3 className="text-lg font-semibold text-secondary-900 mb-2">{t(item.titleKey)}</h3>
-                <p className="text-sm text-secondary-600">{t(item.descKey)}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Values ── */}
+      <section className="section">
+        <div
+          className="section-inner glass"
+          style={{ padding: '56px 60px', borderRadius: 20 }}
+        >
+          <div style={{ textAlign: 'center', marginBottom: 40 }}>
+            <T as="span" className="eyebrow" style={{ display: 'inline-block', marginBottom: 12 }}>{t('about.valuesEyebrow')}</T>
+            <T as="h2" className="section-h2">{t('about.values.title')}</T>
+          </div>
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(4, 1fr)',
+              gap: 20,
+            }}
+          >
+            {[
+              { title: t('about.values.expertCurated'), desc: t('about.values.expertCuratedDesc') },
+              { title: t('about.values.personalized'), desc: t('about.values.personalizedDesc') },
+              { title: t('about.values.safeSecure'), desc: t('about.values.safeSecureDesc') },
+              { title: t('about.values.unforgettable'), desc: t('about.values.unforgettableDesc') },
+            ].map(({ title, desc }) => (
+              <div key={title} className="glass" style={{ padding: '28px 24px', borderRadius: 14 }}>
+                <T as="h3"
+                  style={{
+                    fontFamily: "'Nunito', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 700,
+                    color: 'var(--ink)',
+                    marginBottom: 10,
+                  }}
+                >
+                  {title}
+                </T>
+                <T as="p"
+                  style={{
+                    fontFamily: "'Noto Sans', sans-serif",
+                    fontSize: 13,
+                    color: 'var(--ink-60)',
+                    lineHeight: 1.65,
+                  }}
+                >
+                  {desc}
+                </T>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="section-padding bg-primary-700 text-center text-white">
-        <div className="container-main">
-          <h2 className="text-3xl font-heading font-bold">{t('about.cta.title')}</h2>
-          <p className="mt-4 text-primary-100 max-w-xl mx-auto">{t('about.cta.subtitle')}</p>
-          <Link to="/contact" className="btn bg-white text-primary-700 hover:bg-primary-50 mt-8 font-semibold px-8 py-3 rounded-lg inline-block">
-            {t('about.cta.button')}
-          </Link>
+      {/* ── Team section ── */}
+      <section className="section">
+        <div
+          className="section-inner glass"
+          style={{ padding: '56px 60px', borderRadius: 20 }}
+        >
+          <div style={{ marginBottom: 36 }}>
+            <T as="span" className="eyebrow" style={{ display: 'inline-block', marginBottom: 12 }}>{t('about.teamEyebrow')}</T>
+            <T as="h2" className="section-h2">{t('about.teamTitle')}</T>
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              gap: 20,
+              overflowX: 'auto',
+              paddingBottom: 8,
+            }}
+          >
+            {TEAM.map(({ name, role, initials }) => (
+              <div
+                key={name}
+                className="card"
+                style={{
+                  minWidth: 180,
+                  flexShrink: 0,
+                  padding: '24px 20px',
+                  textAlign: 'center',
+                  borderRadius: 14,
+                  overflow: 'visible',
+                }}
+              >
+                <div
+                  style={{
+                    width: 56,
+                    height: 56,
+                    borderRadius: '50%',
+                    background: 'rgba(46,125,156,0.15)',
+                    fontFamily: "'Nunito', sans-serif",
+                    fontWeight: 600,
+                    fontSize: 20,
+                    color: 'var(--teal)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto 16px',
+                  }}
+                >
+                  {initials}
+                </div>
+                <h4
+                  style={{
+                    fontFamily: "'Nunito', sans-serif",
+                    fontSize: 14,
+                    fontWeight: 600,
+                    color: 'var(--ink)',
+                    marginBottom: 4,
+                  }}
+                >
+                  {name}
+                </h4>
+                <p
+                  style={{
+                    fontFamily: "'Noto Sans', sans-serif",
+                    fontSize: 12,
+                    fontWeight: 300,
+                    color: 'var(--ink-60)',
+                  }}
+                >
+                  {role}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
-    </div>
+
+      {/* ── CTA ── */}
+      <section className="section">
+        <div
+          className="section-inner glass"
+          style={{
+            padding: '52px 48px',
+            borderRadius: 20,
+            textAlign: 'center',
+            background: 'rgba(46,125,156,0.10)',
+            borderColor: 'rgba(46,125,156,0.25)',
+          }}
+        >
+          <T as="h2" className="section-h2" style={{ marginBottom: 12 }}>{t('about.cta.title')}</T>
+          <T as="p" className="section-sub" style={{ margin: '0 auto 32px' }}>{t('about.cta.subtitle')}</T>
+          <Link to="/contact" className="btn-primary"><T>{t('about.cta.button')}</T></Link>
+        </div>
+      </section>
+    </PageShell>
   );
 }

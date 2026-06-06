@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast';
 import App from './App';
 import './i18n';
 import './styles/index.css';
+import './styles/global.css';
 import { CurrencyProvider } from './context/CurrencyContext';
 
 const queryClient = new QueryClient({

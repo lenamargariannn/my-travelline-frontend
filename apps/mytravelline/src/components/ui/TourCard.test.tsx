@@ -69,8 +69,6 @@ describe('TourCard', () => {
 
   it('renders category and destination names', () => {
     renderCard();
-    expect(screen.getByText('Cultural')).toBeInTheDocument();
-    // destination appears as "• Paris" in the span
-    expect(screen.getByText('• Paris')).toBeInTheDocument();
+    expect(screen.getByText('Paris · Cultural')).toBeInTheDocument();
   });
 });

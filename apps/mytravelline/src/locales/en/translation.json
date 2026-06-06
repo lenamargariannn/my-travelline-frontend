@@ -12,7 +12,12 @@
   "hero": {
     "title1": "Creating Timeless",
     "title2": "Memories",
-    "subtitle": "Discover extraordinary destinations and curated travel experiences designed to create unforgettable moments that last a lifetime."
+    "subtitle": "Discover extraordinary destinations and curated travel experiences designed to create unforgettable moments that last a lifetime.",
+    "card": {
+      "departure": { "label": "Next departure", "sub": "Flight + hotel included" },
+      "rating": { "label": "Traveler rating", "sub": "Based on 3,200 reviews" },
+      "destinations": { "label": "Destinations", "value": "85+ countries", "sub": "Across 6 continents" }
+    }
   },
   "common": {
     "exploreTours": "Explore Tours",
@@ -47,7 +52,38 @@
     "testimonials": "What Our Travelers Say",
     "testimonialsSubtitle": "Real stories from real travelers",
     "ctaTitle": "Ready for Your Next Adventure?",
-    "ctaSubtitle": "Let us help you plan the perfect trip. Contact our travel experts today."
+    "ctaSubtitle": "Let us help you plan the perfect trip. Contact our travel experts today.",
+    "eyebrow": "✦ Discover the world with us",
+    "availableNow": "Available Now",
+    "comingSoon": "Coming Soon",
+    "scroll": "— SCROLL ↓",
+    "featuredEyebrow": "Handpicked for you",
+    "whyUsEyebrow": "Why choose us",
+    "whyUsTitle": "15 years of crafting perfect journeys",
+    "whyUsBody": "We believe travel is more than visiting places — it's about experiencing cultures, forging connections, and creating stories worth telling.",
+    "getInTouch": "Get in Touch →",
+    "testimonialsEyebrow": "Testimonials",
+    "search": {
+      "destination": "Destination",
+      "anywhere": "Anywhere",
+      "departure": "Departure",
+      "flexible": "Flexible",
+      "travelers": "Travelers",
+      "onePerson": "1 Person",
+      "button": "Search →"
+    },
+    "stats": {
+      "toursLabel": "Tours",
+      "countriesLabel": "Countries",
+      "travelersLabel": "Travelers",
+      "ratingLabel": "Rating"
+    },
+    "whyUs": {
+      "safe": { "title": "Safe & Trusted", "desc": "24/7 support and vetted local partners." },
+      "experts": { "title": "Local Experts", "desc": "Deep regional knowledge on every route." },
+      "quality": { "title": "Premium Quality", "desc": "Handcrafted itineraries, no compromises." },
+      "flexible": { "title": "Flexible Plans", "desc": "Customise dates, group size and pace." }
+    }
   },
   "tours": {
     "pageTitle": "Our Tours",
@@ -67,18 +103,39 @@
     "notFound": "Tour not found",
     "aboutThisTour": "About This Tour",
     "itinerary": "Itinerary",
-    "travelerReviews": "Traveler Reviews"
+    "travelerReviews": "Traveler Reviews",
+    "eyebrow": "Explore",
+    "detail": {
+      "aboutEyebrow": "About this tour",
+      "dayByDay": "Day by Day",
+      "durationLabel": "Duration",
+      "groupSizeLabel": "Group size",
+      "destinationLabel": "Destination",
+      "categoryLabel": "Category",
+      "reviewsEyebrow": "Reviews",
+      "backSuffix": "to all tours"
+    }
   },
   "destinations": {
     "pageTitle": "Destinations",
     "pageSubtitle": "Explore breathtaking destinations around the world",
     "notFound": "Destination not found",
-    "toursIn": "Tours in {{name}}"
+    "toursIn": "Tours in {{name}}",
+    "eyebrow": "Around the world",
+    "detail": {
+      "aboutEyebrow": "About {{name}}",
+      "discoverHeading": "Discover {{name}}",
+      "fallbackDesc": "Explore the wonders of {{name}}, {{country}}. An unforgettable destination waiting to be discovered.",
+      "availableTours": "Available Tours",
+      "noTours": "No tours available for this destination yet.",
+      "days": "days"
+    }
   },
   "gallery": {
     "pageTitle": "Gallery",
     "pageSubtitle": "A visual journey through our most beautiful destinations",
-    "imageAlt": "Gallery image"
+    "imageAlt": "Gallery image",
+    "eyebrow": "Visual journey"
   },
   "blog": {
     "pageTitle": "Travel Blog",
@@ -86,7 +143,9 @@
     "notFound": "Post not found",
     "readMore": "Read More",
     "noArticles": "No articles found",
-    "minRead": "min read"
+    "minRead": "min read",
+    "eyebrow": "Stories & tips",
+    "readArticle": "Read Article →"
   },
   "about": {
     "hero": {
@@ -114,6 +173,16 @@
       "title": "Ready to Start Your Journey?",
       "subtitle": "Let our travel experts help you plan the perfect trip.",
       "button": "Get In Touch"
+    },
+    "storyEyebrow": "Our story",
+    "valuesEyebrow": "Our promise",
+    "teamEyebrow": "The people",
+    "teamTitle": "Our Team",
+    "stats": {
+      "years": "Years in business",
+      "destinations": "Destinations",
+      "travelers": "Happy travelers",
+      "rating": "Average rating"
     }
   },
   "contact": {
@@ -121,9 +190,18 @@
     "pageSubtitle": "Have questions? We'd love to hear from you. Send us a message and we'll respond as soon as possible.",
     "getInTouch": "Get In Touch",
     "getInTouchDesc": "Whether you're planning your dream vacation or have questions about our tours, our travel experts are here to help.",
+    "eyebrow": "Get in touch",
+    "formTitle": "Send us a message",
+    "findUs": "Find us",
     "addressLabel": "Address",
+    "addressValue": "82 Sebastia Street\nYerevan, 0065",
     "phoneLabel": "Phone",
+    "phoneValue": "+374 10 123 456",
     "emailLabel": "Email",
+    "emailValue": "contact@my-travelline.com",
+    "hoursLabel": "Hours",
+    "hoursValue": "Mon – Sat, 9:00 – 18:00",
+    "mapComingSoon": "Map coming soon",
     "form": {
       "fullName": "Full Name *",
       "email": "Email *",
@@ -171,8 +249,11 @@
     "quickLinks": "Quick Links",
     "tourCategories": "Tour Categories",
     "contactUs": "Contact Us",
-    "address": "123 Travel Street, Suite 100\nNew York, NY 10001",
+    "address": "82 Sebastia Street\nYerevan, 0065",
     "allRightsReserved": "All rights reserved.",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "support": "Support",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "aboutUs": "About Us",

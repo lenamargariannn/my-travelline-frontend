@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toursApi, reviewsApi } from '@/api/endpoints';
@@ -6,7 +6,8 @@ import { useCurrency } from '@/hooks/useCurrency';
 import BookingForm from '@/components/forms/BookingForm';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import { imageUrl } from '@/lib/imageUrl';
-import { HiClock, HiUsers, HiLocationMarker, HiTag } from 'react-icons/hi';
+import PageShell from '@/components/PageShell';
+import T from '@/components/ui/T';
 
 export default function TourDetailPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -25,114 +26,289 @@ export default function TourDetailPage() {
     enabled: !!tour?.id,
   });
 
-  if (isLoading) return <LoadingSpinner />;
-  if (!tour) return <div className="container-main py-20 text-center">{t('tours.notFound')}</div>;
+  if (isLoading) {
+    return (
+      <PageShell>
+        <LoadingSpinner />
+      </PageShell>
+    );
+  }
+
+  if (!tour) {
+    return (
+      <PageShell>
+        <div style={{ padding: '80px 40px', textAlign: 'center', color: 'var(--ink-60)' }}>
+          <T>{t('tours.notFound')}</T>
+        </div>
+      </PageShell>
+    );
+  }
 
   return (
-    <div>
-      {/* Hero */}
-      <section className="relative h-96 bg-secondary-200">
-        {tour.coverImage && (
-          <img src={imageUrl(tour.coverImage)} alt={tour.title} className="w-full h-full object-cover" onError={(e) => { e.currentTarget.style.display = 'none'; }} />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 p-8 container-main text-white">
-          <div className="flex items-center gap-2 mb-3">
-            {tour.categoryName && <span className="badge-primary">{tour.categoryName}</span>}
-            {tour.destinationName && (
-              <span className="badge bg-white/20 text-white">{tour.destinationName}</span>
+    <PageShell>
+      {/* ── Above fold: 2-column ── */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          maxWidth: 1200,
+          margin: '0 auto',
+          padding: '40px 40px 0',
+          display: 'grid',
+          gridTemplateColumns: '58fr 38fr',
+          gap: 40,
+          alignItems: 'start',
+        }}
+      >
+        {/* Left — cover image */}
+        <div>
+          <div
+            style={{
+              borderRadius: 16,
+              overflow: 'hidden',
+              boxShadow: '0 8px 40px rgba(7,32,47,0.18)',
+              background: 'linear-gradient(135deg, rgba(46,125,156,0.20) 0%, rgba(140,200,235,0.30) 100%)',
+            }}
+          >
+            {tour.coverImage ? (
+              <img
+                src={imageUrl(tour.coverImage)}
+                alt={tour.title}
+                style={{ width: '100%', display: 'block', objectFit: 'cover', maxHeight: 480 }}
+                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+              />
+            ) : (
+              <div style={{ height: 420 }} />
             )}
           </div>
-          <h1 className="text-3xl md:text-5xl font-heading font-bold">{tour.title}</h1>
+
+          {tour.images && tour.images.length > 0 && (
+            <div style={{ display: 'flex', gap: 10, marginTop: 12, overflowX: 'auto', paddingBottom: 4 }}>
+              {tour.images.map((img) => (
+                <div
+                  key={img.id}
+                  style={{ width: 80, height: 60, borderRadius: 8, overflow: 'hidden', flexShrink: 0 }}
+                >
+                  <img
+                    src={imageUrl(img.s3Key)}
+                    alt={img.caption}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right — booking panel */}
+        <div
+          className="glass-strong"
+          style={{
+            borderRadius: 20,
+            padding: 28,
+            position: 'sticky',
+            top: 86,
+          }}
+        >
+          <h1
+            style={{
+              fontFamily: "'Nunito', sans-serif",
+              fontSize: 26,
+              fontWeight: 700,
+              color: 'var(--ink)',
+              lineHeight: 1.25,
+              marginBottom: 16,
+            }}
+          >
+            {tour.title}
+          </h1>
+
+          <div style={{ marginBottom: 20 }}>
+            <span
+              style={{
+                fontFamily: "'Nunito', sans-serif",
+                fontSize: 32,
+                fontWeight: 800,
+                color: 'var(--teal)',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {formatPrice(tour.convertedPrice ?? tour.price)}
+            </span>
+            <T as="span"
+              style={{
+                fontFamily: "'Noto Sans', sans-serif",
+                fontSize: 13,
+                color: 'var(--ink-35)',
+                marginLeft: 6,
+              }}
+            >
+              {t('tours.perPerson')}
+            </T>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginBottom: 24 }}>
+            <div style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 14, color: 'var(--ink-60)' }}>
+              <T as="strong" style={{ color: 'var(--ink-35)', fontWeight: 500 }}>{t('tours.detail.durationLabel')}:</T>{' '}
+              {tour.durationDays} <T>{tour.durationDays === 1 ? t('tours.day') : t('tours.days')}</T>
+            </div>
+            <div style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 14, color: 'var(--ink-60)' }}>
+              <T as="strong" style={{ color: 'var(--ink-35)', fontWeight: 500 }}>{t('tours.detail.groupSizeLabel')}:</T>{' '}
+              <T>{t('tours.maxPeople', { count: tour.maxGroupSize })}</T>
+            </div>
+            {tour.destinationName && (
+              <div style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 14, color: 'var(--ink-60)' }}>
+                <T as="strong" style={{ color: 'var(--ink-35)', fontWeight: 500 }}>{t('tours.detail.destinationLabel')}:</T>{' '}
+                {tour.destinationName}
+              </div>
+            )}
+            {tour.categoryName && (
+              <div style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 14, color: 'var(--ink-60)' }}>
+                <T as="strong" style={{ color: 'var(--ink-35)', fontWeight: 500 }}>{t('tours.detail.categoryLabel')}:</T>{' '}
+                {tour.categoryName}
+              </div>
+            )}
+          </div>
+
+          <BookingForm tourId={tour.id} tourTitle={tour.title} />
+        </div>
+      </div>
+
+      {/* ── Description ── */}
+      <section className="section">
+        <div
+          className="section-inner glass"
+          style={{ padding: '56px 60px', borderRadius: 20 }}
+        >
+          <T as="span" className="eyebrow" style={{ display: 'inline-block', marginBottom: 12 }}>{t('tours.detail.aboutEyebrow')}</T>
+          <T as="h2" className="section-h2">{t('tours.aboutThisTour')}</T>
+          <p
+            style={{
+              fontFamily: "'Noto Sans', sans-serif",
+              fontSize: 15,
+              color: 'var(--ink-60)',
+              lineHeight: 1.75,
+              marginTop: 20,
+              whiteSpace: 'pre-line',
+            }}
+          >
+            {tour.description}
+          </p>
         </div>
       </section>
 
-      <div className="container-main py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-2 space-y-10">
-            {/* Quick Info */}
-            <div className="flex flex-wrap gap-6 p-6 bg-secondary-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <HiClock className="h-5 w-5 text-primary-600" />
-                <span className="text-sm">{tour.durationDays} {tour.durationDays === 1 ? t('tours.day') : t('tours.days')}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <HiUsers className="h-5 w-5 text-primary-600" />
-                <span className="text-sm">{t('tours.maxPeople', { count: tour.maxGroupSize })}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <HiLocationMarker className="h-5 w-5 text-primary-600" />
-                <span className="text-sm">{tour.destinationName}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <HiTag className="h-5 w-5 text-primary-600" />
-                <span className="text-sm">{tour.categoryName}</span>
-              </div>
-            </div>
-
-            {/* Description */}
-            <div>
-              <h2 className="text-2xl font-heading font-bold mb-4">{t('tours.aboutThisTour')}</h2>
-              <p className="text-secondary-600 leading-relaxed whitespace-pre-line">{tour.description}</p>
-            </div>
-
-            {/* Itinerary */}
-            {tour.itineraryDays && tour.itineraryDays.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-heading font-bold mb-6">{t('tours.itinerary')}</h2>
-                <div className="space-y-4">
-                  {tour.itineraryDays.map((day) => (
-                    <div key={day.id} className="flex gap-4 p-4 bg-secondary-50 rounded-lg">
-                      <div className="w-12 h-12 bg-primary-600 text-white rounded-full flex items-center justify-center font-bold shrink-0">
-                        {day.dayNumber}
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-secondary-800">{day.title}</h3>
-                        <p className="text-sm text-secondary-600 mt-1">{day.description}</p>
-                      </div>
+      {/* ── Itinerary ── */}
+      {tour.itineraryDays && tour.itineraryDays.length > 0 && (
+        <section className="section">
+          <div
+            className="section-inner glass"
+            style={{ padding: '56px 60px', borderRadius: 20 }}
+          >
+            <T as="span" className="eyebrow" style={{ display: 'inline-block', marginBottom: 12 }}>{t('tours.detail.dayByDay')}</T>
+            <T as="h2" className="section-h2">{t('tours.itinerary')}</T>
+            <div style={{ marginTop: 36, display: 'flex', flexDirection: 'column' }}>
+              {tour.itineraryDays.map((day, idx) => (
+                <div key={day.id}>
+                  {idx > 0 && (
+                    <div style={{ height: 1, background: 'var(--ink-18)', margin: '28px 0' }} />
+                  )}
+                  <div style={{ display: 'flex', gap: 28, alignItems: 'flex-start' }}>
+                    <div
+                      style={{
+                        fontFamily: "'Nunito', sans-serif",
+                        fontSize: 48,
+                        fontWeight: 800,
+                        color: 'var(--teal)',
+                        lineHeight: 1,
+                        flexShrink: 0,
+                        width: 64,
+                      }}
+                    >
+                      {day.dayNumber}
                     </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Reviews */}
-            {reviews && reviews.length > 0 && (
-              <div>
-                <h2 className="text-2xl font-heading font-bold mb-6">{t('tours.travelerReviews')}</h2>
-                <div className="space-y-4">
-                  {reviews.map((review) => (
-                    <div key={review.id} className="p-4 border border-secondary-200 rounded-lg">
-                      <div className="flex items-center gap-1 mb-2">
-                        {[...Array(5)].map((_, i) => (
-                          <span key={i} className={i < review.rating ? 'text-yellow-400' : 'text-secondary-200'}>★</span>
-                        ))}
-                      </div>
-                      <p className="text-sm text-secondary-600">"{review.content}"</p>
-                      <p className="text-xs text-secondary-500 mt-2">— {review.authorName}, {review.authorLocation}</p>
+                    <div style={{ paddingTop: 6 }}>
+                      <h3
+                        style={{
+                          fontFamily: "'Nunito', sans-serif",
+                          fontSize: 18,
+                          fontWeight: 600,
+                          color: 'var(--ink)',
+                          marginBottom: 8,
+                        }}
+                      >
+                        {day.title}
+                      </h3>
+                      <p
+                        style={{
+                          fontFamily: "'Noto Sans', sans-serif",
+                          fontSize: 15,
+                          fontWeight: 300,
+                          color: 'var(--ink-60)',
+                          lineHeight: 1.75,
+                        }}
+                      >
+                        {day.description}
+                      </p>
                     </div>
-                  ))}
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sidebar — Booking */}
-          <div className="lg:col-span-1">
-            <div className="sticky top-24 space-y-6">
-              <div className="card p-6">
-                <div className="text-center mb-6">
-                  <span className="text-3xl font-bold text-primary-700">
-                    {formatPrice(tour.convertedPrice ?? tour.price)}
-                  </span>
-                  <span className="text-secondary-500 text-sm"> {t('tours.perPerson')}</span>
-                </div>
-                <BookingForm tourId={tour.id} tourTitle={tour.title} />
-              </div>
+              ))}
             </div>
           </div>
+        </section>
+      )}
+
+      {/* ── Reviews ── */}
+      {reviews && reviews.length > 0 && (
+        <section className="section">
+          <div
+            className="section-inner glass"
+            style={{ padding: '56px 60px', borderRadius: 20 }}
+          >
+            <T as="span" className="eyebrow" style={{ display: 'inline-block', marginBottom: 12 }}>{t('tours.detail.reviewsEyebrow')}</T>
+            <T as="h2" className="section-h2">{t('tours.travelerReviews')}</T>
+            <div style={{ marginTop: 36, display: 'flex', flexDirection: 'column', gap: 16 }}>
+              {reviews.map((review) => (
+                <div key={review.id} className="glass" style={{ padding: '20px 24px' }}>
+                  <div style={{ display: 'flex', gap: 2, marginBottom: 10 }}>
+                    {[...Array(5)].map((_, i) => (
+                      <span
+                        key={i}
+                        style={{ fontSize: 14, color: i < review.rating ? '#f59e0b' : 'rgba(7,32,47,0.15)' }}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                  <p
+                    style={{
+                      fontFamily: "'Noto Sans', sans-serif",
+                      fontSize: 14,
+                      color: 'var(--ink-60)',
+                      fontStyle: 'italic',
+                      lineHeight: 1.65,
+                      marginBottom: 12,
+                    }}
+                  >
+                    &ldquo;{review.content}&rdquo;
+                  </p>
+                  <p style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 12, color: 'var(--ink-35)' }}>
+                    — {review.authorName}, {review.authorLocation}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── CTA ── */}
+      <section style={{ padding: '0 40px 80px', position: 'relative', zIndex: 10 }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto', textAlign: 'center' }}>
+          <Link to="/tours" className="btn-secondary">&larr; <T>{t('common.back')}</T> to all tours</Link>
         </div>
-      </div>
-    </div>
+      </section>
+    </PageShell>
   );
 }
