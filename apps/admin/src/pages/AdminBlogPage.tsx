@@ -124,7 +124,7 @@ function ConfirmDelete({ onConfirm, onCancel }: { onConfirm: () => void; onCance
 
 const TRANSLATION_FIELDS = [
   { key: 'title', label: 'Title' },
-  { key: 'summary', label: 'Summary', multiline: true },
+  { key: 'excerpt', label: 'Summary', multiline: true },
   { key: 'content', label: 'Content', multiline: true },
 ];
 

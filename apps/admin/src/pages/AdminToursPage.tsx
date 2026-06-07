@@ -287,12 +287,12 @@ export default function AdminToursPage() {
   };
 
   const translationFields = useMemo<FieldDef[]>(() => [
-    { key: 'title', label: 'Title' },
+    { key: 'name', label: 'Title' },
     { key: 'summary', label: 'Summary', multiline: true },
     { key: 'description', label: 'Description', multiline: true },
     ...form.itineraryDays.flatMap((day) => [
-      { key: `day_${day.dayNumber}_title`, label: `Day ${day.dayNumber} Title` },
-      { key: `day_${day.dayNumber}_description`, label: `Day ${day.dayNumber} Description`, multiline: true },
+      { key: `itinerary_day_${day.dayNumber}_title`, label: `Day ${day.dayNumber} Title` },
+      { key: `itinerary_day_${day.dayNumber}_description`, label: `Day ${day.dayNumber} Description`, multiline: true },
     ]),
   ], [form.itineraryDays]);
 
