@@ -13,7 +13,7 @@ export default function TourCard({ tour }: TourCardProps) {
   const { formatPrice } = useCurrency();
 
   return (
-    <Link to={`/tours/${tour.slug}`} className="card" style={{ display: 'block' }}>
+    <Link to={`/tours/${tour.slug}`} className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Image */}
       <div style={{ height: 210, overflow: 'hidden', position: 'relative' }}>
         {tour.coverImage ? (
@@ -54,7 +54,7 @@ export default function TourCard({ tour }: TourCardProps) {
       </div>
 
       {/* Body */}
-      <div style={{ padding: '18px 20px 20px' }}>
+      <div style={{ padding: '18px 20px 20px', display: 'flex', flexDirection: 'column', flex: 1 }}>
         {(tour.destinationName || tour.categoryName) && (
           <p style={{
             fontFamily: "'Noto Sans', sans-serif",
@@ -97,7 +97,7 @@ export default function TourCard({ tour }: TourCardProps) {
         </p>
 
         {/* Footer */}
-        <div>
+        <div style={{ marginTop: 'auto' }}>
           <div style={{
             fontFamily: "'Nunito', sans-serif",
             fontSize: 20,

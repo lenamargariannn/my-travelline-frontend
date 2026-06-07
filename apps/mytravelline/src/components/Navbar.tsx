@@ -76,7 +76,7 @@ export default function Navbar() {
             transition: 'box-shadow 0.3s ease, background 0.3s ease',
           }}
         >
-          <Link to="/" className="mr-8 flex-shrink-0">
+          <Link to="/" className="mr-4 flex-shrink-0">
             <img src="/logo.svg" alt="MyTravelLine" style={{ height: 34 }} />
           </Link>
 
@@ -89,7 +89,7 @@ export default function Navbar() {
                 end={end}
                 style={({ isActive }) => ({
                   fontFamily: "'Noto Sans', sans-serif",
-                  fontSize: 13,
+                  fontSize: 15,
                   fontWeight: isActive ? 600 : 400,
                   color: isActive ? 'var(--teal)' : 'var(--ink-60)',
                   textDecoration: 'none',
