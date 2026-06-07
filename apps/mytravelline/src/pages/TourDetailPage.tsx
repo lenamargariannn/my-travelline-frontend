@@ -11,11 +11,12 @@ import T from '@/components/ui/T';
 
 export default function TourDetailPage() {
   const { slug } = useParams<{ slug: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const { selectedCurrency, formatPrice } = useCurrency();
 
   const { data: tour, isLoading } = useQuery({
-    queryKey: ['tour', slug, selectedCurrency],
+    queryKey: ['tour', slug, selectedCurrency, lang],
     queryFn: () => toursApi.getBySlug(slug!, selectedCurrency).then((res) => res.data),
     enabled: !!slug,
   });

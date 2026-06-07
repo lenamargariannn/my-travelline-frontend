@@ -13,6 +13,7 @@ import type {
   CreateTourRequest,
   CreateBlogPostRequest,
   DashboardStats,
+  TranslationMap,
 } from '@my-travelline/shared';
 import type { LoginRequest, LoginResponse } from '@/types/auth';
 
@@ -159,4 +160,31 @@ export const adminUploadApi = {
 
   delete: (key: string) =>
     apiClient.delete('/admin/uploads', { params: { key } }),
+};
+
+export const adminTranslationsApi = {
+  getTour: (id: number) =>
+    apiClient.get<TranslationMap>(`/admin/tours/${id}/translations`),
+  saveTour: (id: number, data: TranslationMap) =>
+    apiClient.put<TranslationMap>(`/admin/tours/${id}/translations`, data),
+
+  getDestination: (id: number) =>
+    apiClient.get<TranslationMap>(`/admin/destinations/${id}/translations`),
+  saveDestination: (id: number, data: TranslationMap) =>
+    apiClient.put<TranslationMap>(`/admin/destinations/${id}/translations`, data),
+
+  getCategory: (id: number) =>
+    apiClient.get<TranslationMap>(`/admin/categories/${id}/translations`),
+  saveCategory: (id: number, data: TranslationMap) =>
+    apiClient.put<TranslationMap>(`/admin/categories/${id}/translations`, data),
+
+  getBlogPost: (id: number) =>
+    apiClient.get<TranslationMap>(`/admin/blog/${id}/translations`),
+  saveBlogPost: (id: number, data: TranslationMap) =>
+    apiClient.put<TranslationMap>(`/admin/blog/${id}/translations`, data),
+
+  getGalleryImage: (id: number) =>
+    apiClient.get<TranslationMap>(`/admin/gallery/${id}/translations`),
+  saveGalleryImage: (id: number, data: TranslationMap) =>
+    apiClient.put<TranslationMap>(`/admin/gallery/${id}/translations`, data),
 };

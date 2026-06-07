@@ -10,11 +10,12 @@ import PageShell from '@/components/PageShell';
 import T from '@/components/ui/T';
 
 export default function BlogPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const [page, setPage] = useState(0);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['blog', page],
+    queryKey: ['blog', page, lang],
     queryFn: () => blogApi.getAll({ page, size: 10 }).then((res) => res.data),
   });
 

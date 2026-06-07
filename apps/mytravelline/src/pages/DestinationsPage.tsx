@@ -8,10 +8,11 @@ import PageShell from '@/components/PageShell';
 import T from '@/components/ui/T';
 
 export default function DestinationsPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
 
   const { data: destinations, isLoading } = useQuery({
-    queryKey: ['destinations'],
+    queryKey: ['destinations', lang],
     queryFn: () => destinationsApi.getAll().then((res) => res.data),
   });
 

@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { adminDestinationsApi } from '@/api/endpoints';
-import type { Destination } from '@my-travelline/shared';
+import { adminDestinationsApi, adminTranslationsApi } from '@/api/endpoints';
+import type { Destination, TranslationMap } from '@my-travelline/shared';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Modal from '@/components/ui/Modal';
 import ImageUploader from '@/components/ui/ImageUploader';
+import TranslationEditor from '@/components/TranslationEditor';
 
 const toSlug = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -104,10 +105,16 @@ function ConfirmDelete({ onConfirm, onCancel }: { onConfirm: () => void; onCance
   );
 }
 
+const TRANSLATION_FIELDS = [
+  { key: 'name', label: 'Name' },
+  { key: 'description', label: 'Description', multiline: true },
+];
+
 export default function AdminDestinationsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<DestinationFormState>(emptyForm);
+  const [translationMap, setTranslationMap] = useState<TranslationMap>({});
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const queryClient = useQueryClient();
@@ -117,27 +124,35 @@ export default function AdminDestinationsPage() {
     queryFn: () => adminDestinationsApi.getAll().then(r => r.data),
   });
 
-  const createMutation = useMutation({
-    mutationFn: (data: Partial<Destination>) => adminDestinationsApi.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'destinations'] }); toast.success('Destination created'); closeModal(); },
-    onError: () => toast.error('Failed to create destination'),
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Destination> }) => adminDestinationsApi.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'destinations'] }); toast.success('Destination updated'); closeModal(); },
-    onError: () => toast.error('Failed to update destination'),
-  });
-
   const deleteMutation = useMutation({
     mutationFn: (id: number) => adminDestinationsApi.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'destinations'] }); toast.success('Destination deleted'); setConfirmDeleteId(null); },
     onError: () => toast.error('Failed to delete destination'),
   });
 
-  const openCreate = () => { setEditingId(null); setForm(emptyForm()); setModalOpen(true); };
-  const openEdit = (dest: Destination) => { setForm(fromDestination(dest)); setEditingId(dest.id); setModalOpen(true); };
-  const closeModal = () => { setModalOpen(false); setEditingId(null); setForm(emptyForm()); };
+  const openCreate = () => {
+    setEditingId(null);
+    setForm(emptyForm());
+    setTranslationMap({});
+    setModalOpen(true);
+  };
+
+  const openEdit = async (dest: Destination) => {
+    const [translationsRes] = await Promise.all([
+      adminTranslationsApi.getDestination(dest.id).catch(() => ({ data: {} as TranslationMap })),
+    ]);
+    setForm(fromDestination(dest));
+    setTranslationMap(translationsRes.data ?? {});
+    setEditingId(dest.id);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditingId(null);
+    setForm(emptyForm());
+    setTranslationMap({});
+  };
 
   const handleSubmit = async () => {
     if (!form.name.trim() || !form.slug.trim()) {
@@ -145,13 +160,30 @@ export default function AdminDestinationsPage() {
       return;
     }
     setSubmitting(true);
-    const req = toRequest(form);
-    if (editingId != null) {
-      await updateMutation.mutateAsync({ id: editingId, data: req });
-    } else {
-      await createMutation.mutateAsync(req);
+    try {
+      const req = toRequest(form);
+      let entityId = editingId;
+      if (editingId != null) {
+        await adminDestinationsApi.update(editingId, req);
+        queryClient.invalidateQueries({ queryKey: ['admin', 'destinations'] });
+        toast.success('Destination updated');
+      } else {
+        const res = await adminDestinationsApi.create(req);
+        entityId = res.data.id;
+        queryClient.invalidateQueries({ queryKey: ['admin', 'destinations'] });
+        toast.success('Destination created');
+      }
+      if (entityId != null) {
+        await adminTranslationsApi.saveDestination(entityId, translationMap).catch(() => {
+          toast.error('Failed to save translations');
+        });
+      }
+      closeModal();
+    } catch {
+      toast.error('Failed to save destination');
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -203,6 +235,14 @@ export default function AdminDestinationsPage() {
 
       <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Edit Destination' : 'New Destination'} size="md">
         <DestinationForm form={form} onChange={setForm} />
+        <div className="mt-6">
+          <p className="text-xs font-semibold text-secondary-500 uppercase tracking-wide mb-2">Translations</p>
+          <TranslationEditor
+            fields={TRANSLATION_FIELDS}
+            value={translationMap}
+            onChange={setTranslationMap}
+          />
+        </div>
         <div className="flex gap-3 justify-end pt-4 border-t border-secondary-200 mt-6">
           <button className="btn-secondary btn-sm" onClick={closeModal}>Cancel</button>
           <button className="btn-primary btn-sm" onClick={handleSubmit} disabled={submitting}>

@@ -10,7 +10,8 @@ import PageShell from '@/components/PageShell';
 import T from '@/components/ui/T';
 
 export default function ToursPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const { selectedCurrency } = useCurrency();
   const [searchParams, setSearchParams] = useSearchParams();
   const [page, setPage] = useState(0);
@@ -20,7 +21,7 @@ export default function ToursPage() {
   const search = searchParams.get('search') || '';
 
   const { data: toursData, isLoading } = useQuery({
-    queryKey: ['tours', page, category, destination, search, selectedCurrency],
+    queryKey: ['tours', page, category, destination, search, selectedCurrency, lang],
     queryFn: () =>
       toursApi
         .getAll({ page, size: 12, currency: selectedCurrency, ...(category && { category }), ...(destination && { destination }), ...(search && { search }) })
@@ -28,12 +29,12 @@ export default function ToursPage() {
   });
 
   const { data: categories } = useQuery({
-    queryKey: ['categories'],
+    queryKey: ['categories', lang],
     queryFn: () => categoriesApi.getAll().then((res) => res.data),
   });
 
   const { data: destinations } = useQuery({
-    queryKey: ['destinations'],
+    queryKey: ['destinations', lang],
     queryFn: () => destinationsApi.getAll().then((res) => res.data),
   });
 

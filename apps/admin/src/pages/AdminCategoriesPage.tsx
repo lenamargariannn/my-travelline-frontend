@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { adminCategoriesApi } from '@/api/endpoints';
-import type { Category } from '@my-travelline/shared';
+import { adminCategoriesApi, adminTranslationsApi } from '@/api/endpoints';
+import type { Category, TranslationMap } from '@my-travelline/shared';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Modal from '@/components/ui/Modal';
+import TranslationEditor from '@/components/TranslationEditor';
 
 const toSlug = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -98,10 +99,16 @@ function ConfirmDelete({ onConfirm, onCancel }: { onConfirm: () => void; onCance
   );
 }
 
+const TRANSLATION_FIELDS = [
+  { key: 'name', label: 'Name' },
+  { key: 'description', label: 'Description', multiline: true },
+];
+
 export default function AdminCategoriesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<CategoryFormState>(emptyForm);
+  const [translationMap, setTranslationMap] = useState<TranslationMap>({});
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const queryClient = useQueryClient();
@@ -111,27 +118,35 @@ export default function AdminCategoriesPage() {
     queryFn: () => adminCategoriesApi.getAll().then(r => r.data),
   });
 
-  const createMutation = useMutation({
-    mutationFn: (data: Partial<Category>) => adminCategoriesApi.create(data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] }); toast.success('Category created'); closeModal(); },
-    onError: () => toast.error('Failed to create category'),
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<Category> }) => adminCategoriesApi.update(id, data),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] }); toast.success('Category updated'); closeModal(); },
-    onError: () => toast.error('Failed to update category'),
-  });
-
   const deleteMutation = useMutation({
     mutationFn: (id: number) => adminCategoriesApi.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] }); toast.success('Category deleted'); setConfirmDeleteId(null); },
     onError: () => toast.error('Failed to delete category'),
   });
 
-  const openCreate = () => { setEditingId(null); setForm(emptyForm()); setModalOpen(true); };
-  const openEdit = (cat: Category) => { setForm(fromCategory(cat)); setEditingId(cat.id); setModalOpen(true); };
-  const closeModal = () => { setModalOpen(false); setEditingId(null); setForm(emptyForm()); };
+  const openCreate = () => {
+    setEditingId(null);
+    setForm(emptyForm());
+    setTranslationMap({});
+    setModalOpen(true);
+  };
+
+  const openEdit = async (cat: Category) => {
+    const [translationsRes] = await Promise.all([
+      adminTranslationsApi.getCategory(cat.id).catch(() => ({ data: {} as TranslationMap })),
+    ]);
+    setForm(fromCategory(cat));
+    setTranslationMap(translationsRes.data ?? {});
+    setEditingId(cat.id);
+    setModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditingId(null);
+    setForm(emptyForm());
+    setTranslationMap({});
+  };
 
   const handleSubmit = async () => {
     if (!form.name.trim() || !form.slug.trim()) {
@@ -139,13 +154,30 @@ export default function AdminCategoriesPage() {
       return;
     }
     setSubmitting(true);
-    const req = toRequest(form);
-    if (editingId != null) {
-      await updateMutation.mutateAsync({ id: editingId, data: req });
-    } else {
-      await createMutation.mutateAsync(req);
+    try {
+      const req = toRequest(form);
+      let entityId = editingId;
+      if (editingId != null) {
+        await adminCategoriesApi.update(editingId, req);
+        queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
+        toast.success('Category updated');
+      } else {
+        const res = await adminCategoriesApi.create(req);
+        entityId = res.data.id;
+        queryClient.invalidateQueries({ queryKey: ['admin', 'categories'] });
+        toast.success('Category created');
+      }
+      if (entityId != null) {
+        await adminTranslationsApi.saveCategory(entityId, translationMap).catch(() => {
+          toast.error('Failed to save translations');
+        });
+      }
+      closeModal();
+    } catch {
+      toast.error('Failed to save category');
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -195,6 +227,14 @@ export default function AdminCategoriesPage() {
 
       <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Edit Category' : 'New Category'} size="md">
         <CategoryForm form={form} onChange={setForm} />
+        <div className="mt-6">
+          <p className="text-xs font-semibold text-secondary-500 uppercase tracking-wide mb-2">Translations</p>
+          <TranslationEditor
+            fields={TRANSLATION_FIELDS}
+            value={translationMap}
+            onChange={setTranslationMap}
+          />
+        </div>
         <div className="flex gap-3 justify-end pt-4 border-t border-secondary-200 mt-6">
           <button className="btn-secondary btn-sm" onClick={closeModal}>Cancel</button>
           <button className="btn-primary btn-sm" onClick={handleSubmit} disabled={submitting}>

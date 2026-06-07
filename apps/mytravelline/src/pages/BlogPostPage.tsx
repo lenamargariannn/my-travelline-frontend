@@ -11,11 +11,12 @@ import T from '@/components/ui/T';
 
 export default function BlogPostPage() {
   const { slug } = useParams<{ slug: string }>();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const [progress, setProgress] = useState(0);
 
   const { data: post, isLoading } = useQuery({
-    queryKey: ['blog', slug],
+    queryKey: ['blog', slug, lang],
     queryFn: () => blogApi.getBySlug(slug!).then((res) => res.data),
     enabled: !!slug,
   });

@@ -8,11 +8,12 @@ import PageShell from '@/components/PageShell';
 import T from '@/components/ui/T';
 
 export default function HomePage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const { selectedCurrency } = useCurrency();
 
   const { data: featuredTours } = useQuery({
-    queryKey: ['tours', 'featured', selectedCurrency],
+    queryKey: ['tours', 'featured', selectedCurrency, lang],
     queryFn: () => toursApi.getFeatured(selectedCurrency).then((res) => res.data),
   });
 

@@ -7,11 +7,12 @@ import PageShell from '@/components/PageShell';
 import T from '@/components/ui/T';
 
 export default function GalleryPage() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const [page, setPage] = useState(0);
 
   const { data, isLoading } = useQuery({
-    queryKey: ['gallery', page],
+    queryKey: ['gallery', page, lang],
     queryFn: () => galleryApi.getAll({ page, size: 24 }).then((res) => res.data),
   });
 

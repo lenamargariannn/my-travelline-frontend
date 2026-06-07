@@ -208,3 +208,13 @@ export interface DashboardStats {
   pendingReviews: number;
 }
 
+// ============================================================
+// i18n / Translation Types
+// ============================================================
+
+export type TranslationMap = {
+  en?: Record<string, string>;
+  hy?: Record<string, string>;
+  ru?: Record<string, string>;
+};
+

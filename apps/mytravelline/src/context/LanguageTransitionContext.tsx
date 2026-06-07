@@ -1,5 +1,6 @@
 import { createContext, useContext, useCallback, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface LangTransitionCtx {
   triggerChange: (lang: string) => void;
@@ -15,6 +16,7 @@ const Ctx = createContext<LangTransitionCtx>({
 
 export function LanguageTransitionProvider({ children }: { children: React.ReactNode }) {
   const { i18n } = useTranslation();
+  const queryClient = useQueryClient();
   const containerRef = useRef<HTMLDivElement>(null);
   const [busy, setBusy] = useState(false);
   const busyRef = useRef(false);
@@ -51,6 +53,7 @@ export function LanguageTransitionProvider({ children }: { children: React.React
       // Change language while everything is invisible
       await i18n.changeLanguage(lang);
       localStorage.setItem('i18n_language', lang);
+      queryClient.invalidateQueries();
 
       // One frame for React to flush new translations into the DOM
       await new Promise((r) => requestAnimationFrame(r));
@@ -68,7 +71,7 @@ export function LanguageTransitionProvider({ children }: { children: React.React
       busyRef.current = false;
       setBusy(false);
     },
-    [i18n]
+    [i18n, queryClient]
   );
 
   return (

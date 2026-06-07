@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { adminBlogApi } from '@/api/endpoints';
-import type { BlogPost, CreateBlogPostRequest } from '@my-travelline/shared';
+import { adminBlogApi, adminTranslationsApi } from '@/api/endpoints';
+import type { BlogPost, CreateBlogPostRequest, TranslationMap } from '@my-travelline/shared';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Modal from '@/components/ui/Modal';
 import ImageUploader from '@/components/ui/ImageUploader';
+import TranslationEditor from '@/components/TranslationEditor';
 
 const toSlug = (s: string) =>
   s.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -121,11 +122,18 @@ function ConfirmDelete({ onConfirm, onCancel }: { onConfirm: () => void; onCance
   );
 }
 
+const TRANSLATION_FIELDS = [
+  { key: 'title', label: 'Title' },
+  { key: 'summary', label: 'Summary', multiline: true },
+  { key: 'content', label: 'Content', multiline: true },
+];
+
 export default function AdminBlogPage() {
   const [page, setPage] = useState(0);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<BlogFormState>(emptyForm);
+  const [translationMap, setTranslationMap] = useState<TranslationMap>({});
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const queryClient = useQueryClient();
@@ -135,38 +143,40 @@ export default function AdminBlogPage() {
     queryFn: () => adminBlogApi.getAll({ page, size: 20 }).then(r => r.data),
   });
 
-  const createMutation = useMutation({
-    mutationFn: (req: CreateBlogPostRequest) => adminBlogApi.create(req),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'blog'] }); toast.success('Post created'); closeModal(); },
-    onError: () => toast.error('Failed to create post'),
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: ({ id, req }: { id: number; req: CreateBlogPostRequest }) => adminBlogApi.update(id, req),
-    onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'blog'] }); toast.success('Post updated'); closeModal(); },
-    onError: () => toast.error('Failed to update post'),
-  });
-
   const deleteMutation = useMutation({
     mutationFn: (id: number) => adminBlogApi.delete(id),
     onSuccess: () => { queryClient.invalidateQueries({ queryKey: ['admin', 'blog'] }); toast.success('Post deleted'); setConfirmDeleteId(null); },
     onError: () => toast.error('Failed to delete post'),
   });
 
-  const openCreate = () => { setEditingId(null); setForm(emptyForm()); setModalOpen(true); };
+  const openCreate = () => {
+    setEditingId(null);
+    setForm(emptyForm());
+    setTranslationMap({});
+    setModalOpen(true);
+  };
 
   const openEdit = async (post: BlogPost) => {
     try {
-      const full = await adminBlogApi.getById(post.id).then(r => r.data);
-      setForm(fromPost(full));
-      setEditingId(full.id);
+      const [fullRes, translationsRes] = await Promise.all([
+        adminBlogApi.getById(post.id),
+        adminTranslationsApi.getBlogPost(post.id).catch(() => ({ data: {} as TranslationMap })),
+      ]);
+      setForm(fromPost(fullRes.data));
+      setTranslationMap(translationsRes.data ?? {});
+      setEditingId(fullRes.data.id);
       setModalOpen(true);
     } catch {
       toast.error('Failed to load post');
     }
   };
 
-  const closeModal = () => { setModalOpen(false); setEditingId(null); setForm(emptyForm()); };
+  const closeModal = () => {
+    setModalOpen(false);
+    setEditingId(null);
+    setForm(emptyForm());
+    setTranslationMap({});
+  };
 
   const handleSubmit = async () => {
     if (!form.title.trim() || !form.slug.trim() || !form.content.trim()) {
@@ -174,13 +184,30 @@ export default function AdminBlogPage() {
       return;
     }
     setSubmitting(true);
-    const req = toRequest(form);
-    if (editingId != null) {
-      await updateMutation.mutateAsync({ id: editingId, req });
-    } else {
-      await createMutation.mutateAsync(req);
+    try {
+      const req = toRequest(form);
+      let entityId = editingId;
+      if (editingId != null) {
+        await adminBlogApi.update(editingId, req);
+        queryClient.invalidateQueries({ queryKey: ['admin', 'blog'] });
+        toast.success('Post updated');
+      } else {
+        const res = await adminBlogApi.create(req);
+        entityId = res.data.id;
+        queryClient.invalidateQueries({ queryKey: ['admin', 'blog'] });
+        toast.success('Post created');
+      }
+      if (entityId != null) {
+        await adminTranslationsApi.saveBlogPost(entityId, translationMap).catch(() => {
+          toast.error('Failed to save translations');
+        });
+      }
+      closeModal();
+    } catch {
+      toast.error('Failed to save post');
+    } finally {
+      setSubmitting(false);
     }
-    setSubmitting(false);
   };
 
   if (isLoading) return <LoadingSpinner />;
@@ -242,6 +269,14 @@ export default function AdminBlogPage() {
 
       <Modal open={modalOpen} onClose={closeModal} title={editingId ? 'Edit Post' : 'New Post'} size="xl">
         <BlogForm form={form} onChange={setForm} />
+        <div className="mt-6">
+          <p className="text-xs font-semibold text-secondary-500 uppercase tracking-wide mb-2">Translations</p>
+          <TranslationEditor
+            fields={TRANSLATION_FIELDS}
+            value={translationMap}
+            onChange={setTranslationMap}
+          />
+        </div>
         <div className="flex gap-3 justify-end pt-4 border-t border-secondary-200 mt-6">
           <button className="btn-secondary btn-sm" onClick={closeModal}>Cancel</button>
           <button className="btn-primary btn-sm" onClick={handleSubmit} disabled={submitting}>

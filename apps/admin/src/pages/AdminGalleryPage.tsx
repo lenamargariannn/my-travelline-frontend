@@ -1,10 +1,11 @@
 import { useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
-import { adminGalleryApi, adminDestinationsApi, adminUploadApi } from '@/api/endpoints';
-import type { GalleryImage } from '@my-travelline/shared';
+import { adminGalleryApi, adminDestinationsApi, adminUploadApi, adminTranslationsApi } from '@/api/endpoints';
+import type { GalleryImage, TranslationMap } from '@my-travelline/shared';
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 import Modal from '@/components/ui/Modal';
+import TranslationEditor from '@/components/TranslationEditor';
 
 interface UploadFormState {
   caption: string;
@@ -13,6 +14,10 @@ interface UploadFormState {
 }
 
 const emptyUploadForm = (): UploadFormState => ({ caption: '', destinationId: '', sortOrder: '' });
+
+const TRANSLATION_FIELDS = [
+  { key: 'caption', label: 'Caption', multiline: true },
+];
 
 function ConfirmDelete({ onConfirm, onCancel }: { onConfirm: () => void; onCancel: () => void }) {
   return (
@@ -33,6 +38,9 @@ export default function AdminGalleryPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
+  const [editingImage, setEditingImage] = useState<GalleryImage | null>(null);
+  const [translationMap, setTranslationMap] = useState<TranslationMap>({});
+  const [savingTranslations, setSavingTranslations] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
 
@@ -54,6 +62,28 @@ export default function AdminGalleryPage() {
 
   const openUpload = () => { setUploadForm(emptyUploadForm()); setSelectedFile(null); setUploadOpen(true); };
   const closeUpload = () => { setUploadOpen(false); setUploadForm(emptyUploadForm()); setSelectedFile(null); };
+
+  const openEditTranslations = async (img: GalleryImage) => {
+    const translationsRes = await adminTranslationsApi.getGalleryImage(img.id).catch(() => ({ data: {} as TranslationMap }));
+    setTranslationMap(translationsRes.data ?? {});
+    setEditingImage(img);
+  };
+
+  const closeEditTranslations = () => { setEditingImage(null); setTranslationMap({}); };
+
+  const handleSaveTranslations = async () => {
+    if (!editingImage) return;
+    setSavingTranslations(true);
+    try {
+      await adminTranslationsApi.saveGalleryImage(editingImage.id, translationMap);
+      toast.success('Translations saved');
+      closeEditTranslations();
+    } catch {
+      toast.error('Failed to save translations');
+    } finally {
+      setSavingTranslations(false);
+    }
+  };
 
   const handleUpload = async () => {
     if (!selectedFile) {
@@ -110,8 +140,14 @@ export default function AdminGalleryPage() {
                 {img.caption && <p className="text-white text-xs text-center line-clamp-2">{img.caption}</p>}
                 {img.destinationName && <p className="text-secondary-300 text-xs">{img.destinationName}</p>}
                 <button
+                  onClick={() => openEditTranslations(img)}
+                  className="mt-1 text-xs text-blue-300 hover:text-blue-100"
+                >
+                  Translate
+                </button>
+                <button
                   onClick={() => setConfirmDeleteId(img.id)}
-                  className="mt-1 text-xs text-red-300 hover:text-red-100"
+                  className="text-xs text-red-300 hover:text-red-100"
                 >
                   Delete
                 </button>
@@ -168,6 +204,27 @@ export default function AdminGalleryPage() {
             {uploading ? 'Uploading…' : 'Upload'}
           </button>
         </div>
+      </Modal>
+
+      <Modal open={editingImage != null} onClose={closeEditTranslations} title="Image Translations" size="sm">
+        {editingImage && (
+          <>
+            {editingImage.caption && (
+              <p className="text-xs text-secondary-500 mb-4">Caption: {editingImage.caption}</p>
+            )}
+            <TranslationEditor
+              fields={TRANSLATION_FIELDS}
+              value={translationMap}
+              onChange={setTranslationMap}
+            />
+            <div className="flex gap-3 justify-end pt-4 border-t border-secondary-200 mt-6">
+              <button className="btn-secondary btn-sm" onClick={closeEditTranslations}>Cancel</button>
+              <button className="btn-primary btn-sm" onClick={handleSaveTranslations} disabled={savingTranslations}>
+                {savingTranslations ? 'Saving…' : 'Save Translations'}
+              </button>
+            </div>
+          </>
+        )}
       </Modal>
 
       {confirmDeleteId != null && (
