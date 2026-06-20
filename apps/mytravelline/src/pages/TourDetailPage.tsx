@@ -68,7 +68,7 @@ export default function TourDetailPage() {
               borderRadius: 16,
               overflow: 'hidden',
               boxShadow: '0 8px 40px rgba(7,32,47,0.18)',
-              background: 'linear-gradient(135deg, rgba(46,125,156,0.20) 0%, rgba(140,200,235,0.30) 100%)',
+              background: 'linear-gradient(135deg, rgba(14,79,110,0.20) 0%, rgba(14,79,110,0.30) 100%)',
             }}
           >
             {tour.coverImage ? (

@@ -55,7 +55,7 @@ export default function ContactPage() {
 
   const onFocus = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     e.currentTarget.style.borderColor = 'var(--teal)';
-    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(46,125,156,0.12)';
+    e.currentTarget.style.boxShadow = '0 0 0 3px rgba(14,79,110,0.12)';
   };
 
   const onBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -216,8 +216,8 @@ export default function ContactPage() {
                 minHeight: 80,
                 marginTop: 20,
                 borderRadius: 12,
-                background: 'rgba(46,125,156,0.05)',
-                border: '1px solid rgba(46,125,156,0.10)',
+                background: 'rgba(14,79,110,0.05)',
+                border: '1px solid rgba(14,79,110,0.10)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',

@@ -21,6 +21,12 @@ export const toursApi = {
 
   getBySlug: (slug: string, currency?: string) =>
     apiClient.get<Tour>(`/tours/${slug}`, { params: currency ? { currency } : undefined }),
+
+  getAvailableDates: (destination?: string) =>
+    apiClient.get<string[]>('/tours/available-dates', { params: destination ? { destination } : undefined }),
+
+  getAvailableDestinations: (startDate?: string) =>
+    apiClient.get<string[]>('/tours/available-destinations', { params: startDate ? { startDate } : undefined }),
 };
 
 export const categoriesApi = {

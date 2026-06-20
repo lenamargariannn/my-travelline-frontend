@@ -29,7 +29,7 @@ export default function TourCard({ tour }: TourCardProps) {
           <div style={{
             width: '100%',
             height: '100%',
-            background: 'linear-gradient(135deg, rgba(46,125,156,0.20) 0%, rgba(140,200,235,0.30) 100%)',
+            background: 'linear-gradient(135deg, rgba(14,79,110,0.20) 0%, rgba(14,79,110,0.30) 100%)',
           }} />
         )}
         {tour.featured && (
@@ -42,7 +42,7 @@ export default function TourCard({ tour }: TourCardProps) {
             fontWeight: 600,
             color: 'var(--teal)',
             background: 'rgba(255,255,255,0.90)',
-            border: '1px solid rgba(46,125,156,0.25)',
+            border: '1px solid rgba(14,79,110,0.25)',
             borderRadius: 6,
             padding: '3px 8px',
             letterSpacing: '0.08em',
@@ -123,8 +123,8 @@ export default function TourCard({ tour }: TourCardProps) {
             fontSize: 12,
             fontWeight: 600,
             color: 'var(--teal)',
-            background: 'rgba(46,125,156,0.10)',
-            border: '1px solid rgba(46,125,156,0.20)',
+            background: 'rgba(14,79,110,0.10)',
+            border: '1px solid rgba(14,79,110,0.20)',
             borderRadius: 8,
             padding: '6px 12px',
           }}>

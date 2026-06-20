@@ -19,12 +19,21 @@ export default function ToursPage() {
   const category = searchParams.get('category') || '';
   const destination = searchParams.get('destination') || '';
   const search = searchParams.get('search') || '';
+  const startDate = searchParams.get('startDate') || '';
+  const travelers = searchParams.get('travelers') || '';
 
   const { data: toursData, isLoading } = useQuery({
-    queryKey: ['tours', page, category, destination, search, selectedCurrency, lang],
+    queryKey: ['tours', page, category, destination, search, startDate, travelers, selectedCurrency, lang],
     queryFn: () =>
       toursApi
-        .getAll({ page, size: 12, currency: selectedCurrency, ...(category && { category }), ...(destination && { destination }), ...(search && { search }) })
+        .getAll({
+          page, size: 12, currency: selectedCurrency,
+          ...(category && { category }),
+          ...(destination && { destination }),
+          ...(search && { search }),
+          ...(startDate && { startDate }),
+          ...(travelers && { travelers }),
+        })
         .then((res) => res.data),
   });
 
@@ -55,7 +64,7 @@ export default function ToursPage() {
     fontSize: 14,
     color: 'var(--ink)',
     background: 'rgba(255,255,255,0.60)',
-    border: '1px solid rgba(46,125,156,0.20)',
+    border: '1px solid rgba(14,79,110,0.20)',
     borderRadius: 12,
     outline: 'none',
     cursor: 'pointer',

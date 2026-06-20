@@ -57,7 +57,7 @@ export default function DestinationDetailPage() {
             onError={(e) => { e.currentTarget.style.display = 'none'; }}
           />
         ) : (
-          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(165deg, #c8e6f7 0%, #a8d4ee 50%, #5aadd4 100%)' }} />
+          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(165deg, #dce8f0 0%, #e8f2f8 50%, #c5dce8 100%)' }} />
         )}
         {/* Bottom gradient */}
         <div
@@ -150,7 +150,7 @@ export default function DestinationDetailPage() {
                       borderBottom: '1px solid var(--ink-18)',
                     }}
                   >
-                    <div style={{ width: 80, height: 56, borderRadius: 8, overflow: 'hidden', flexShrink: 0, background: 'rgba(46,125,156,0.12)' }}>
+                    <div style={{ width: 80, height: 56, borderRadius: 8, overflow: 'hidden', flexShrink: 0, background: 'rgba(14,79,110,0.12)' }}>
                       {tour.coverImage && (
                         <img
                           src={imageUrl(tour.coverImage)}

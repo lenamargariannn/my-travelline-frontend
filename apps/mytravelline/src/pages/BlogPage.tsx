@@ -54,7 +54,7 @@ export default function BlogPage() {
                   className="card"
                   style={{ display: 'grid', gridTemplateColumns: '45fr 55fr', marginBottom: 40, borderRadius: 20 }}
                 >
-                  <div style={{ height: 360, overflow: 'hidden', background: 'rgba(46,125,156,0.12)', flexShrink: 0 }}>
+                  <div style={{ height: 360, overflow: 'hidden', background: 'rgba(14,79,110,0.12)', flexShrink: 0 }}>
                     {featured.coverImage && (
                       <img
                         src={imageUrl(featured.coverImage)}
@@ -133,7 +133,7 @@ export default function BlogPage() {
                       className="card"
                       style={{ textDecoration: 'none', display: 'block' }}
                     >
-                      <div style={{ height: 200, background: 'rgba(46,125,156,0.10)', overflow: 'hidden' }}>
+                      <div style={{ height: 200, background: 'rgba(14,79,110,0.10)', overflow: 'hidden' }}>
                         {post.coverImage && (
                           <img
                             src={imageUrl(post.coverImage)}

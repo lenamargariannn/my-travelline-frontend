@@ -14,9 +14,36 @@
     "title2": "Memories",
     "subtitle": "Discover extraordinary destinations and curated travel experiences designed to create unforgettable moments that last a lifetime.",
     "card": {
-      "departure": { "label": "Next departure", "sub": "Flight + hotel included" },
-      "rating": { "label": "Traveler rating", "sub": "Based on 3,200 reviews" },
-      "destinations": { "label": "Destinations", "value": "85+ countries", "sub": "Across 6 continents" }
+      "departure": {
+        "label": "Next departure",
+        "sub": "Flight + hotel included"
+      },
+      "rating": {
+        "label": "Traveler rating",
+        "sub": "Based on 3,200 reviews"
+      },
+      "destinations": {
+        "label": "Destinations",
+        "value": "85+ countries",
+        "sub": "Across 6 continents"
+      }
+    },
+    "search": {
+      "tabs": {
+        "hotels": "Hotels",
+        "flights": "Flights",
+        "car": "Car",
+        "tour": "Tour"
+      },
+      "fields": {
+        "destination": "Destination",
+        "date": "Date",
+        "travelers": "Travelers"
+      },
+      "button": "Search",
+      "comingSoon": "Coming soon",
+      "anywhere": "Anywhere",
+      "selectDate": "Any date"
     }
   },
   "common": {
@@ -79,10 +106,22 @@
       "ratingLabel": "Rating"
     },
     "whyUs": {
-      "safe": { "title": "Safe & Trusted", "desc": "24/7 support and vetted local partners." },
-      "experts": { "title": "Local Experts", "desc": "Deep regional knowledge on every route." },
-      "quality": { "title": "Premium Quality", "desc": "Handcrafted itineraries, no compromises." },
-      "flexible": { "title": "Flexible Plans", "desc": "Customise dates, group size and pace." }
+      "safe": {
+        "title": "Safe & Trusted",
+        "desc": "24/7 support and vetted local partners."
+      },
+      "experts": {
+        "title": "Local Experts",
+        "desc": "Deep regional knowledge on every route."
+      },
+      "quality": {
+        "title": "Premium Quality",
+        "desc": "Handcrafted itineraries, no compromises."
+      },
+      "flexible": {
+        "title": "Flexible Plans",
+        "desc": "Customise dates, group size and pace."
+      }
     }
   },
   "tours": {

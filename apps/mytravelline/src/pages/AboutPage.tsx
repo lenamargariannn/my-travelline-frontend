@@ -212,7 +212,7 @@ export default function AboutPage() {
                     width: 56,
                     height: 56,
                     borderRadius: '50%',
-                    background: 'rgba(46,125,156,0.15)',
+                    background: 'rgba(14,79,110,0.15)',
                     fontFamily: "'Nunito', sans-serif",
                     fontWeight: 600,
                     fontSize: 20,
@@ -260,8 +260,8 @@ export default function AboutPage() {
             padding: '52px 48px',
             borderRadius: 20,
             textAlign: 'center',
-            background: 'rgba(46,125,156,0.10)',
-            borderColor: 'rgba(46,125,156,0.25)',
+            background: 'rgba(14,79,110,0.10)',
+            borderColor: 'rgba(14,79,110,0.25)',
           }}
         >
           <T as="h2" className="section-h2" style={{ marginBottom: 12 }}>{t('about.cta.title')}</T>

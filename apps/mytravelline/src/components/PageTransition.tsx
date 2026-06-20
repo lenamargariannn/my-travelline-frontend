@@ -35,6 +35,8 @@ export default function PageTransition({ children }: Props) {
   return (
     <div
       style={{
+        position: 'relative',
+        zIndex: 5,
         opacity: phase === 'out' ? 0 : 1,
         transform:
           phase === 'out'

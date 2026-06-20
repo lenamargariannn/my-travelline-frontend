@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import HeroSearchWidget from '@/components/hero/HeroSearchWidget';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toursApi, reviewsApi } from '@/api/endpoints';
@@ -29,8 +30,6 @@ export default function HomePage() {
     { title: t('home.whyUs.flexible.title'), desc: t('home.whyUs.flexible.desc') },
   ];
 
-  const departureText = featuredTours?.[0]?.title ? 'Available Now' : 'Coming Soon';
-
   return (
     <PageShell>
       {/* ── Hero ── */}
@@ -38,161 +37,67 @@ export default function HomePage() {
         style={{
           position: 'relative',
           zIndex: 10,
-          minHeight: '92vh',
+          minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'center',
-          padding: '80px 40px 60px',
+          marginTop: -66,
+          padding: '146px 40px 80px 80px',
+          backgroundImage: 'url(/hero-bg.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'top center',
+          backgroundRepeat: 'no-repeat',
         }}
       >
-        {/* Cloud card — top-left: Next departure */}
-        <div className="cloud-card cloud-depart">
-          <div style={{ paddingTop: 26 }}>
-            <T as="div" className="fc-lbl">
-              <span className="pulse-dot" />
-              {t('hero.card.departure.label')}
-            </T>
-            <T as="div" className="fc-val">{departureText}</T>
-            <T as="div" className="fc-sub">{t('hero.card.departure.sub')}</T>
-          </div>
-        </div>
+        {/* Triangular gradient overlay — bottom-left anchor, fades to transparent near center */}
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 0, pointerEvents: 'none',
+          background: [
+            'radial-gradient(ellipse 70% 90% at 0% 100%, rgba(248,250,252,0.92) 0%, rgba(248,250,252,0.74) 22%, rgba(248,250,252,0.50) 42%, rgba(248,250,252,0.22) 60%, rgba(248,250,252,0.06) 76%, transparent 90%)',
+            'linear-gradient(to top right, rgba(248,250,252,0.68) 0%, rgba(248,250,252,0.38) 30%, rgba(248,250,252,0.10) 50%, transparent 65%)',
+          ].join(', '),
+        }} />
 
-        {/* Cloud card — top-right: Traveler rating */}
-        <div className="cloud-card cloud-rating">
-          <div style={{ paddingTop: 32 }}>
-            <T as="div" className="fc-lbl">{t('hero.card.rating.label')}</T>
-            <T as="div" className="fc-val">
-              4.9{' '}
-              <span style={{ fontSize: 12, fontWeight: 400, color: 'var(--ink-35)' }}>
-                / 5.0
+        {/* Hero text + search */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', animation: 'fadeUp 0.7s 0.1s ease both', position: 'relative', zIndex: 1, width: '100%', maxWidth: 'calc(50vw - 40px)' }}>
+          <div style={{ maxWidth: 620 }}>
+            <h1
+              style={{
+                fontFamily: "'Nunito', sans-serif",
+                fontSize: 'clamp(42px, 6.2vw, 74px)',
+                letterSpacing: '-0.03em',
+                lineHeight: 1.05,
+                color: 'var(--ink)',
+                marginTop: 16,
+                marginBottom: 36,
+              }}
+            >
+              <em style={{
+                display: 'block',
+                fontWeight: 800, fontStyle: 'italic', color: 'var(--teal)',
+              }}>
+                <T>{t('hero.title1')}</T>
+              </em>
+              <span style={{ fontWeight: 800, fontStyle: 'italic', color: 'var(--teal)' }}>
+                <T>{t('hero.title2')}</T>
               </span>
+            </h1>
+            <T as="p"
+              style={{
+                fontFamily: "'Noto Sans', sans-serif",
+                fontSize: 15,
+                fontWeight: 450,
+                color: '#0E4F6E',
+                maxWidth: 440,
+                margin: '0 0 52px',
+                lineHeight: 1.75,
+              }}
+            >
+              {t('hero.subtitle')}
             </T>
-            <T as="div" className="fc-sub">{t('hero.card.rating.sub')}</T>
           </div>
-        </div>
-
-        {/* Cloud card — bottom-right: Destinations */}
-        <div className="cloud-card cloud-dest">
-          <div style={{ paddingTop: 26 }}>
-            <T as="div" className="fc-lbl">{t('hero.card.destinations.label')}</T>
-            <T as="div" className="fc-val">{t('hero.card.destinations.value')}</T>
-            <T as="div" className="fc-sub">{t('hero.card.destinations.sub')}</T>
-          </div>
-        </div>
-
-        {/* Hero text */}
-        <div style={{ textAlign: 'center', maxWidth: 680, animation: 'fadeUp 0.7s 0.1s ease both' }}>
-          <T as="span" className="eyebrow" style={{ marginBottom: 20, display: 'inline-block' }}>{t('home.eyebrow')}</T>
-          <h1
-            style={{
-              fontFamily: "'Nunito', sans-serif",
-              fontSize: 'clamp(42px, 6.2vw, 74px)',
-              letterSpacing: '-0.03em',
-              lineHeight: 1.05,
-              color: 'var(--ink)',
-              marginTop: 16,
-              marginBottom: 20,
-            }}
-          >
-            <em style={{
-              display: 'block', whiteSpace: 'nowrap', textAlign: 'center',
-              fontWeight: 400, fontStyle: 'italic', color: '#1a5a7a',
-              width: '100vw', position: 'relative', left: '50%', transform: 'translateX(-50%)',
-            }}>
-              <T>{t('hero.title1')}</T>
-            </em>
-            <span style={{ fontWeight: 400, fontStyle: 'italic', color: 'var(--teal)' }}>
-              <T>{t('hero.title2')}</T>
-            </span>
-          </h1>
-          <T as="p"
-            style={{
-              fontFamily: "'Noto Sans', sans-serif",
-              fontSize: 15,
-              fontWeight: 300,
-              color: 'var(--ink-60)',
-              maxWidth: 440,
-              margin: '0 auto 36px',
-              lineHeight: 1.75,
-            }}
-          >
-            {t('hero.subtitle')}
-          </T>
-          <div style={{ display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap', marginBottom: 44 }}>
-            <Link to="/tours" className="btn-primary"><T>{t('common.exploreTours')}</T> →</Link>
-            <Link to="/contact" className="btn-secondary"><T>{t('common.planYourTrip')}</T></Link>
-          </div>
-        </div>
-
-        {/* Search bar + stats strip */}
-        <div style={{ width: 'min(680px, 92%)', animation: 'fadeUp 0.7s 0.4s ease both' }}>
-          {/* Search bar */}
-          <div
-            className="glass-strong"
-            style={{ borderRadius: '14px 14px 0 0', display: 'flex', alignItems: 'stretch' }}
-          >
-            <div style={{ flex: 1, padding: '14px 20px', borderRight: '1px solid rgba(46,125,156,0.10)' }}>
-              <T as="div" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 9.5, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ink-35)', marginBottom: 4 }}>
-                {t('home.search.destination')}
-              </T>
-              <T as="div" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 13, color: 'var(--ink)' }}>{t('home.search.anywhere')}</T>
-            </div>
-            <div style={{ flex: 1, padding: '14px 20px', borderRight: '1px solid rgba(46,125,156,0.10)' }}>
-              <T as="div" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 9.5, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ink-35)', marginBottom: 4 }}>
-                {t('home.search.departure')}
-              </T>
-              <T as="div" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 13, color: 'var(--ink)' }}>{t('home.search.flexible')}</T>
-            </div>
-            <div style={{ flex: 1, padding: '14px 20px' }}>
-              <T as="div" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 9.5, fontWeight: 600, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--ink-35)', marginBottom: 4 }}>
-                {t('home.search.travelers')}
-              </T>
-              <T as="div" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 13, color: 'var(--ink)' }}>{t('home.search.onePerson')}</T>
-            </div>
-            <div style={{ padding: 8, display: 'flex', alignItems: 'center', flexShrink: 0 }}>
-              <Link
-                to="/tours"
-                className="btn-primary"
-                style={{ borderRadius: 8, padding: '10px 18px', fontSize: 13, whiteSpace: 'nowrap' }}
-              >
-                <T>{t('home.search.button')}</T>
-              </Link>
-            </div>
-          </div>
-
-          {/* Stats strip */}
-          <div style={{
-            borderRadius: '0 0 14px 14px',
-            background: 'rgba(255,255,255,0.44)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-          }}>
-            {[
-              { value: '850+', label: t('home.stats.toursLabel') },
-              { value: '85+', label: t('home.stats.countriesLabel') },
-              { value: '12K+', label: t('home.stats.travelersLabel') },
-              { value: '4.9★', label: t('home.stats.ratingLabel') },
-            ].map(({ value, label }, i) => (
-              <div
-                key={label}
-                style={{
-                  textAlign: 'center',
-                  padding: '12px 0',
-                  borderRight: i < 3 ? '1px solid rgba(46,125,156,0.08)' : 'none',
-                }}
-              >
-                <div style={{ fontFamily: "'Nunito', sans-serif", fontSize: 20, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em' }}>
-                  {value}
-                </div>
-                <T as="div" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 10, color: 'var(--ink-35)' }}>
-                  {label}
-                </T>
-              </div>
-            ))}
-          </div>
+          <HeroSearchWidget />
         </div>
 
         {/* Scroll hint */}
@@ -202,6 +107,7 @@ export default function HomePage() {
             bottom: 20,
             left: '50%',
             transform: 'translateX(-50%)',
+            zIndex: 1,
             fontFamily: "'Noto Sans', sans-serif",
             fontSize: 11.5,
             letterSpacing: '0.10em',
@@ -383,7 +289,7 @@ export default function HomePage() {
             borderRadius: 20,
             textAlign: 'center',
             background: 'rgb(17 49 65 / 0.25)',
-            borderColor: 'rgba(46,125,156,0.25)',
+            borderColor: 'rgba(14,79,110,0.25)',
           }}
         >
           <T as="h2" className="section-h2" style={{ marginBottom: 12 }}>{t('home.ctaTitle')}</T>

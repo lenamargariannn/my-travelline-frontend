@@ -72,7 +72,7 @@ export default function DestinationsPage() {
                           overflow: 'hidden',
                           textDecoration: 'none',
                           display: 'block',
-                          background: 'rgba(46,125,156,0.15)',
+                          background: 'rgba(14,79,110,0.15)',
                         }}
                       >
                         {dest.coverImage ? (
@@ -91,7 +91,7 @@ export default function DestinationsPage() {
                             onError={(e) => { e.currentTarget.style.display = 'none'; }}
                           />
                         ) : (
-                          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, rgba(46,125,156,0.20) 0%, rgba(140,200,235,0.30) 100%)' }} />
+                          <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg, rgba(14,79,110,0.20) 0%, rgba(14,79,110,0.30) 100%)' }} />
                         )}
 
                         {/* Glass nameplate */}
