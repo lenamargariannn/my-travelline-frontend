@@ -179,12 +179,12 @@ file — never substitute with text or a placeholder div.
 
 ```css
 :root {
-  --ink:     #07202f;             /* primary text */
-  --ink-60:  rgba(7,32,47,0.60); /* secondary text */
-  --ink-35:  rgba(7,32,47,0.35); /* muted / labels */
-  --ink-18:  rgba(7,32,47,0.18); /* borders, dividers */
-  --teal:    #2E7D9C;             /* brand blue-teal — primary accent */
-  --red:     #CB2912;             /* brand red — CTA, highlights */
+  --ink: #07202f; /* primary text */
+  --ink-60: rgba(7, 32, 47, 0.60); /* secondary text */
+  --ink-35: rgba(7, 32, 47, 0.35); /* muted / labels */
+  --ink-18: rgba(7, 32, 47, 0.18); /* borders, dividers */
+  --teal: #2E7D9C; /* brand blue-teal — primary accent */
+  --orange: #CB2912; /* brand red — CTA, highlights */
 }
 ```
 
@@ -272,7 +272,7 @@ box-shadow:    0 6px 40px rgba(46,125,156,0.12),
   active state: `background: rgba(46,125,156,0.10)`, border `rgba(46,125,156,0.40)`;
   disabled (during language transition): `opacity: 0.55`, `cursor: not-allowed`
 - Currency pill: same 8px radius, matches language button style
-- "Book Now" CTA: `background: var(--red)`, `border-radius: 8px`, Nunito 600,
+- "Book Now" CTA: `background: var(--orange)`, `border-radius: 8px`, Nunito 600,
   `box-shadow: 0 3px 14px rgba(203,41,18,0.28)`, hover lift + stronger shadow
 - Entry animation: `slideDown` — `opacity: 0, translateY(-16px)` → normal, 0.65s
 
@@ -281,7 +281,7 @@ box-shadow:    0 6px 40px rgba(46,125,156,0.12),
 **Primary (red CTA):**
 ```css
 padding: 13px 30px;
-background: var(--red);
+background: var(--orange);
 border: none; border-radius: 10px;
 color: #fff; font-family: 'Nunito'; font-size: 14px; font-weight: 700;
 box-shadow: 0 4px 22px rgba(203,41,18,0.30);

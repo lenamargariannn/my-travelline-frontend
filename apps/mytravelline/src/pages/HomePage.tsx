@@ -75,11 +75,11 @@ export default function HomePage() {
             >
               <em style={{
                 display: 'block',
-                fontWeight: 800, fontStyle: 'italic', color: 'var(--teal)',
+                fontWeight: 850, fontStyle: 'italic', color: 'var(--ink)',
               }}>
                 <T>{t('hero.title1')}</T>
               </em>
-              <span style={{ fontWeight: 800, fontStyle: 'italic', color: 'var(--teal)' }}>
+              <span style={{ fontWeight: 850, fontStyle: 'italic', color: 'var(--ink)' }}>
                 <T>{t('hero.title2')}</T>
               </span>
             </h1>
@@ -88,7 +88,7 @@ export default function HomePage() {
                 fontFamily: "'Noto Sans', sans-serif",
                 fontSize: 17,
                 fontWeight: 450,
-                color: '#0E4F6E',
+                color: 'var(--ink)',
                 maxWidth: 600,
                 margin: '0 0 52px',
                 lineHeight: 1.75,

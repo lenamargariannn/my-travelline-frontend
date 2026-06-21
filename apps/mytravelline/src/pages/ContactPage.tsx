@@ -105,7 +105,7 @@ export default function ContactPage() {
                   onBlur={onBlur}
                 />
                 {errors.name && (
-                  <T as="p" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 12, color: 'var(--red)', marginTop: 4 }}>
+                  <T as="p" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 12, color: 'var(--orange)', marginTop: 4 }}>
                     {errors.name.message}
                   </T>
                 )}
@@ -125,7 +125,7 @@ export default function ContactPage() {
                   onBlur={onBlur}
                 />
                 {errors.email && (
-                  <T as="p" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 12, color: 'var(--red)', marginTop: 4 }}>
+                  <T as="p" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 12, color: 'var(--orange)', marginTop: 4 }}>
                     {errors.email.message}
                   </T>
                 )}
@@ -153,7 +153,7 @@ export default function ContactPage() {
                   onBlur={onBlur}
                 />
                 {errors.message && (
-                  <T as="p" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 12, color: 'var(--red)', marginTop: 4 }}>
+                  <T as="p" style={{ fontFamily: "'Noto Sans', sans-serif", fontSize: 12, color: 'var(--orange)', marginTop: 4 }}>
                     {errors.message.message}
                   </T>
                 )}

@@ -16,7 +16,7 @@ html, body {
   --ink-35: rgba(7,32,47,0.35);
   --ink-18: rgba(7,32,47,0.18);
   --teal:   #0E4F6E;
-  --red:    #FF5A3C;
+  --orange: #FF5A3C;
   --accent: #FFC857;
 }
 
@@ -256,7 +256,7 @@ html, body {
   font-weight: 700;
   letter-spacing: 0.01em;
   color: #fff;
-  background: var(--red);
+  background: var(--orange);
   border: none;
   border-radius: 10px;
   padding: 13px 30px;
@@ -403,7 +403,7 @@ html, body {
 
 .input-error {
   font-size: 12px;
-  color: var(--red);
+  color: var(--orange);
   margin-top: 4px;
 }
 

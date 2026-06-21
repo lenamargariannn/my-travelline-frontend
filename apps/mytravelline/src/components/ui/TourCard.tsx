@@ -134,13 +134,13 @@ export default function TourCard({ tour }: TourCardProps) {
                 alignItems: 'center',
                 gap: 5,
                 fontFamily: "'Noto Sans', sans-serif",
-                fontSize: 11.5,
+                fontSize: 12,
                 fontWeight: 600,
-                color: 'var(--ink)',
-                background: 'rgba(14,79,110,0.07)',
-                border: '1px solid rgba(14,79,110,0.15)',
-                borderRadius: 7,
-                padding: '5px 10px',
+                color: 'var(--teal)',
+                background: 'rgba(14,79,110,0.10)',
+                border: '1px solid rgba(14,79,110,0.20)',
+                borderRadius: 8,
+                padding: '6px 12px',
               }}>
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.6, flexShrink: 0 }}>
                   <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
