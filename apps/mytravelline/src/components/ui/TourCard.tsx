@@ -23,7 +23,7 @@ export default function TourCard({ tour }: TourCardProps) {
   const lang = i18n.language;
 
   return (
-    <Link to={`/tours/${tour.slug}`} className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Link to={`/tours/${tour.slug}${tour.nextDeparture ? `?date=${tour.nextDeparture}` : ''}`} className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
       {/* Image */}
       <div style={{ height: 210, overflow: 'hidden', position: 'relative' }}>
         {tour.coverImage ? (
