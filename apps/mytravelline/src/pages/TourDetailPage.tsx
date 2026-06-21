@@ -1,4 +1,4 @@
-import { useParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { toursApi, reviewsApi } from '@/api/endpoints';
@@ -11,6 +11,8 @@ import T from '@/components/ui/T';
 
 export default function TourDetailPage() {
   const { slug } = useParams<{ slug: string }>();
+  const [searchParams] = useSearchParams();
+  const preselectedDate = searchParams.get('date') ?? undefined;
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const { selectedCurrency, formatPrice } = useCurrency();
@@ -172,7 +174,7 @@ export default function TourDetailPage() {
             )}
           </div>
 
-          <BookingForm tourId={tour.id} tourTitle={tour.title} />
+          <BookingForm tourId={tour.id} tourTitle={tour.title} initialDate={preselectedDate} />
         </div>
       </div>
 

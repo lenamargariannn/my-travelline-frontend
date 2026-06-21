@@ -8,16 +8,19 @@ import type { CreateBookingRequest } from '@my-travelline/shared';
 interface BookingFormProps {
   tourId: number;
   tourTitle: string;
+  initialDate?: string;
 }
 
-export default function BookingForm({ tourId, tourTitle }: BookingFormProps) {
+export default function BookingForm({ tourId, tourTitle, initialDate }: BookingFormProps) {
   const { t } = useTranslation();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<Omit<CreateBookingRequest, 'tourId'>>();
+  } = useForm<Omit<CreateBookingRequest, 'tourId'>>({
+    defaultValues: initialDate ? { travelDate: initialDate } : undefined,
+  });
 
   const mutation = useMutation({
     mutationFn: (data: CreateBookingRequest) => bookingsApi.create(data),
