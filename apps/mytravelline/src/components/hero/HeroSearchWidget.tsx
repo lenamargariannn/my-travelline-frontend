@@ -169,10 +169,8 @@ export default function HeroSearchWidget() {
   );
 
   return (
-    <div style={{ width: '100%', marginTop: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
+    <div style={{ width: '100%', marginTop: 0 }}>
       <div style={{
-        flex: 1,
-        minWidth: 0,
         background: 'rgba(255,255,255,0.62)',
         backdropFilter: 'blur(28px) saturate(180%)',
         WebkitBackdropFilter: 'blur(28px) saturate(180%)',
@@ -237,36 +235,37 @@ export default function HeroSearchWidget() {
           </div>
         </div>
 
-      </div>
+        {/* Search button — inside */}
+        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12 }}>
+          <button
+            onClick={handleSearch}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              fontFamily: "'Nunito', sans-serif",
+              fontSize: 14,
+              fontWeight: 700,
+              color: '#fff',
+              background: 'var(--ink)',
+              border: 'none',
+              borderRadius: 14,
+              padding: '0 24px',
+              height: 44,
+              cursor: 'pointer',
+              whiteSpace: 'nowrap',
+              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+              boxShadow: '0 3px 14px rgba(7,32,47,0.22)',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 22px rgba(7,32,47,0.34)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 3px 14px rgba(7,32,47,0.22)'; }}
+          >
+            <SearchIcon />
+            <T>{t('hero.search.button')}</T>
+          </button>
+        </div>
 
-      {/* Search button — outside */}
-      <button
-        onClick={handleSearch}
-        style={{
-          flexShrink: 0,
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: 8,
-          fontFamily: "'Nunito', sans-serif",
-          fontSize: 14,
-          fontWeight: 700,
-          color: '#fff',
-          background: 'var(--ink)',
-          border: 'none',
-          borderRadius: 14,
-          padding: '0 28px',
-          height: 56,
-          cursor: 'pointer',
-          whiteSpace: 'nowrap',
-          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-          boxShadow: '0 3px 14px rgba(7,32,47,0.22)',
-        }}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 22px rgba(7,32,47,0.34)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 3px 14px rgba(7,32,47,0.22)'; }}
-      >
-        <SearchIcon />
-        <T>{t('hero.search.button')}</T>
-      </button>
+      </div>
     </div>
   );
 }

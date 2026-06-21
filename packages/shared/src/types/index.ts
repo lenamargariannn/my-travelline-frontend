@@ -52,6 +52,7 @@ export interface TourSummary {
   featured: boolean;
   categoryName: string;
   destinationName: string;
+  nextDeparture?: string | null;
 }
 
 export interface TourImage {
