@@ -35,6 +35,7 @@ export interface Tour {
   destinationName: string;
   images: TourImage[];
   itineraryDays: TourItineraryDay[];
+  departures: TourDeparture[];
 }
 
 export type TourStatus = 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
@@ -67,6 +68,12 @@ export interface TourItineraryDay {
   dayNumber: number;
   title: string;
   description: string;
+}
+
+export interface TourDeparture {
+  id: number;
+  departureDate: string;
+  availableSlots?: number | null;
 }
 
 export interface Category {
@@ -185,6 +192,7 @@ export interface CreateTourRequest {
   categoryId?: number;
   destinationId?: number;
   itineraryDays?: Omit<TourItineraryDay, 'id'>[];
+  departures?: Omit<TourDeparture, 'id'>[];
 }
 
 export interface CreateBlogPostRequest {

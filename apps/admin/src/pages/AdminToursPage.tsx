@@ -16,6 +16,7 @@ const emptyForm = (): TourFormState => ({
   durationDays: '', maxGroupSize: '', coverImage: '', featured: false,
   categoryId: '', destinationId: '',
   itineraryDays: [],
+  departures: [],
 });
 
 interface TourFormState {
@@ -24,6 +25,7 @@ interface TourFormState {
   coverImage: string; featured: boolean;
   categoryId: string; destinationId: string;
   itineraryDays: { dayNumber: number; title: string; description: string }[];
+  departures: { departureDate: string; availableSlots: string }[];
 }
 
 function toRequest(f: TourFormState): CreateTourRequest {
@@ -42,6 +44,14 @@ function toRequest(f: TourFormState): CreateTourRequest {
     itineraryDays: f.itineraryDays.length
       ? f.itineraryDays.map(({ dayNumber, title, description }) => ({ dayNumber, title, description }))
       : undefined,
+    departures: f.departures.length
+      ? f.departures
+          .filter(d => d.departureDate)
+          .map(({ departureDate, availableSlots }) => ({
+            departureDate,
+            availableSlots: availableSlots ? parseInt(availableSlots) : null,
+          }))
+      : undefined,
   };
 }
 
@@ -59,6 +69,10 @@ function fromTour(tour: Tour): TourFormState {
     categoryId: tour.categoryId ? String(tour.categoryId) : '',
     destinationId: tour.destinationId ? String(tour.destinationId) : '',
     itineraryDays: (tour.itineraryDays ?? []).map(({ dayNumber, title, description }) => ({ dayNumber, title, description })),
+    departures: (tour.departures ?? []).map(({ departureDate, availableSlots }) => ({
+      departureDate,
+      availableSlots: availableSlots != null ? String(availableSlots) : '',
+    })),
   };
 }
 
@@ -81,6 +95,13 @@ function TourForm({ form, onChange }: TourFormProps) {
     set({ itineraryDays: form.itineraryDays.filter((_, i) => i !== idx).map((d, i) => ({ ...d, dayNumber: i + 1 })) });
   const updateDay = (idx: number, patch: Partial<{ title: string; description: string }>) =>
     set({ itineraryDays: form.itineraryDays.map((d, i) => i === idx ? { ...d, ...patch } : d) });
+
+  const addDeparture = () =>
+    set({ departures: [...form.departures, { departureDate: '', availableSlots: '' }] });
+  const removeDeparture = (idx: number) =>
+    set({ departures: form.departures.filter((_, i) => i !== idx) });
+  const updateDeparture = (idx: number, patch: Partial<{ departureDate: string; availableSlots: string }>) =>
+    set({ departures: form.departures.map((d, i) => i === idx ? { ...d, ...patch } : d) });
 
   return (
     <div className="space-y-4">
@@ -181,6 +202,45 @@ function TourForm({ form, onChange }: TourFormProps) {
             </div>
           ))}
         </div>
+      </div>
+
+      {/* Departure Dates */}
+      <div>
+        <div className="flex items-center justify-between mb-2">
+          <label className="input-label mb-0">Departure Dates</label>
+          <button type="button" onClick={addDeparture} className="text-xs text-primary-600 hover:underline">+ Add Departure</button>
+        </div>
+        {form.departures.length === 0 ? (
+          <p className="text-xs text-secondary-400">No departure dates yet.</p>
+        ) : (
+          <div className="space-y-2">
+            {form.departures.map((dep, idx) => (
+              <div key={idx} className="flex items-end gap-3 border border-secondary-200 rounded-lg p-3 bg-secondary-50">
+                <div className="flex-1">
+                  <label className="input-label">Date</label>
+                  <input
+                    className="input-field"
+                    type="date"
+                    value={dep.departureDate}
+                    onChange={e => updateDeparture(idx, { departureDate: e.target.value })}
+                  />
+                </div>
+                <div className="w-32">
+                  <label className="input-label">Slots</label>
+                  <input
+                    className="input-field"
+                    type="number"
+                    min="1"
+                    placeholder="Optional"
+                    value={dep.availableSlots}
+                    onChange={e => updateDeparture(idx, { availableSlots: e.target.value })}
+                  />
+                </div>
+                <button type="button" onClick={() => removeDeparture(idx)} className="text-xs text-accent-600 hover:underline pb-2.5">Remove</button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

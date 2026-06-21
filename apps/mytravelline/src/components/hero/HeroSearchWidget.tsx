@@ -69,17 +69,17 @@ const labelStyle: React.CSSProperties = {
 };
 
 const stepBtn: React.CSSProperties = {
-  width: 20, height: 20, flexShrink: 0,
+  width: 16, height: 16, flexShrink: 0,
   border: 'none',
-  borderRadius: 6,
+  borderRadius: 4,
   background: 'var(--ink)',
   cursor: 'pointer',
   color: '#fff',
-  fontSize: 13,
+  fontSize: 11,
   fontWeight: 600,
   display: 'flex', alignItems: 'center', justifyContent: 'center',
   lineHeight: 1, padding: 0,
-  boxShadow: '0 2px 8px rgba(7,32,47,0.22)',
+  boxShadow: '0 2px 6px rgba(7,32,47,0.22)',
   transition: 'opacity 0.15s',
 };
 
@@ -156,7 +156,7 @@ export default function HeroSearchWidget() {
   };
 
   const fieldInner = (icon: React.ReactNode, labelKey: string, children: React.ReactNode, showChevron = false) => (
-    <div style={{ padding: '10px 16px 8px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 4 }}>
+    <div style={{ padding: '5px 16px 4px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 2 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 5, ...labelStyle }}>
         {icon}
         <T>{t(labelKey)}</T>
@@ -169,15 +169,17 @@ export default function HeroSearchWidget() {
   );
 
   return (
-    <div style={{ width: '100%', marginTop: 0 }}>
+    <div style={{ width: '100%', marginTop: 0, display: 'flex', alignItems: 'center', gap: 12 }}>
       <div style={{
+        flex: 1,
+        minWidth: 0,
         background: 'rgba(255,255,255,0.62)',
         backdropFilter: 'blur(28px) saturate(180%)',
         WebkitBackdropFilter: 'blur(28px) saturate(180%)',
         border: '1px solid rgba(255,255,255,0.90)',
         borderRadius: 20,
         boxShadow: '0 8px 40px rgba(14,79,110,0.13), inset 0 1px 0 rgba(255,255,255,0.95)',
-        padding: '6px 20px',
+        padding: '4px 20px',
         display: 'flex',
         gap: 0,
         alignItems: 'stretch',
@@ -223,8 +225,8 @@ export default function HeroSearchWidget() {
 
         {/* Travelers */}
         <div style={{ flexShrink: 0 }}>
-          <div style={{ padding: '10px 16px 8px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 4 }}>
-            <div style={labelStyle}>
+          <div style={{ padding: '5px 16px 4px', height: '100%', boxSizing: 'border-box', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', alignItems: 'center', gap: 2 }}>
+            <div style={{ ...labelStyle, minHeight: 12, display: 'flex', alignItems: 'center' }}>
               <T>{t('hero.search.fields.travelers')}</T>
             </div>
             <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8 }}>
@@ -235,37 +237,36 @@ export default function HeroSearchWidget() {
           </div>
         </div>
 
-        {/* Search button — inside */}
-        <div style={{ flexShrink: 0, display: 'flex', alignItems: 'center', paddingLeft: 12 }}>
-          <button
-            onClick={handleSearch}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              fontFamily: "'Nunito', sans-serif",
-              fontSize: 14,
-              fontWeight: 700,
-              color: '#fff',
-              background: 'var(--ink)',
-              border: 'none',
-              borderRadius: 14,
-              padding: '0 24px',
-              height: 44,
-              cursor: 'pointer',
-              whiteSpace: 'nowrap',
-              transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-              boxShadow: '0 3px 14px rgba(7,32,47,0.22)',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 22px rgba(7,32,47,0.34)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 3px 14px rgba(7,32,47,0.22)'; }}
-          >
-            <SearchIcon />
-            <T>{t('hero.search.button')}</T>
-          </button>
-        </div>
-
       </div>
+
+      {/* Search button — outside */}
+      <button
+        onClick={handleSearch}
+        style={{
+          flexShrink: 0,
+          alignSelf: 'stretch',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 8,
+          fontFamily: "'Nunito', sans-serif",
+          fontSize: 14,
+          fontWeight: 700,
+          color: '#fff',
+          background: 'var(--ink)',
+          border: '1px solid rgba(0,0,0,0.95)',
+          borderRadius: 20,
+          padding: '0 38px',
+          cursor: 'pointer',
+          whiteSpace: 'nowrap',
+          transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+          boxShadow: '0 3px 14px rgba(7,32,47,0.22)',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 6px 22px rgba(7,32,47,0.34)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 3px 14px rgba(7,32,47,0.22)'; }}
+      >
+        <SearchIcon />
+        <T>{t('hero.search.button')}</T>
+      </button>
     </div>
   );
 }
