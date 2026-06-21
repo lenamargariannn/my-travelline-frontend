@@ -86,10 +86,10 @@ export default function HomePage() {
             <T as="p"
               style={{
                 fontFamily: "'Noto Sans', sans-serif",
-                fontSize: 15,
+                fontSize: 17,
                 fontWeight: 450,
                 color: '#0E4F6E',
-                maxWidth: 440,
+                maxWidth: 600,
                 margin: '0 0 52px',
                 lineHeight: 1.75,
               }}
